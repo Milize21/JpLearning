@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Public surface of the Content module for other modules (docs/02 §6.2). SharedKernel only. -->
+  <PropertyGroup>
+    <RootNamespace>Nomax.Modules.Content.Contracts</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\Nomax.SharedKernel\Nomax.SharedKernel.csproj" />
+  </ItemGroup>
+</Project>

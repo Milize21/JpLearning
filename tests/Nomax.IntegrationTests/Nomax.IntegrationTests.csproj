@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    API and Gateway in memory (docs/09 §1): JWTs signed with a local test key, Keycloak Admin API faked behind its interface,
+    real PostgreSQL and Valkey through Testcontainers (Docker must be running). No test calls the internet.
+  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+    <PackageReference Include="Testcontainers.PostgreSql" />
+    <PackageReference Include="Testcontainers.Redis" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Nomax.Api\Nomax.Api.csproj" />
+    <!-- Both hosts declare a global Program class; the alias keeps them apart. -->
+    <ProjectReference Include="..\..\src\Nomax.Gateway\Nomax.Gateway.csproj" Aliases="gateway" />
+  </ItemGroup>
+</Project>

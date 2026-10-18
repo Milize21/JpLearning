@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Pure shared types: BCL only, no ASP.NET Core or EF Core (enforced by Nomax.ArchitectureTests). -->
+  <PropertyGroup>
+    <RootNamespace>Nomax.SharedKernel</RootNamespace>
+  </PropertyGroup>
+</Project>

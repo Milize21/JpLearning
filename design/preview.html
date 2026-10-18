@@ -1,0 +1,693 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NomaX Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Noto+Sans+JP:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="tokens.css">
+<style>
+/* Pratinjau ini hanya memakai var(--nx-*) dari tokens.css. Tidak ada nilai warna literal. */
+:root { color-scheme: light; }
+* { box-sizing: border-box; }
+html { font-family: var(--nx-font-sans); color: var(--nx-ink); background: var(--nx-bg); -webkit-font-smoothing: antialiased; }
+body { margin: 0; line-height: var(--nx-leading-normal); }
+:lang(ja) { font-family: var(--nx-font-ja); font-style: normal; }
+:lang(ja-Latn) { font-family: var(--nx-font-sans); }
+ruby rt { font-size: .5em; color: var(--nx-ink-muted); font-weight: 500; }
+:focus-visible { outline: 2px solid var(--nx-ring); outline-offset: 2px; }
+svg.i { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+
+.brandbar { height: var(--nx-brandbar-h); background: var(--nx-action); }
+.topbar { position: sticky; top: 0; z-index: var(--nx-z-sticky); display: flex; align-items: center; gap: 12px; min-height: var(--nx-topbar-h); padding: 8px 24px; background: var(--nx-surface); border-bottom: 1px solid var(--nx-line); flex-wrap: wrap; }
+.topbar .spacer { flex: 1; }
+.logo { width: 32px; height: 32px; border-radius: 6px; display: block; }
+.wordmark { font-size: 16px; font-weight: 500; letter-spacing: -0.01em; white-space: nowrap; }
+.wordmark b { font-weight: 800; }
+.control { display: flex; align-items: center; gap: 8px; font-size: var(--nx-text-body-sm); color: var(--nx-ink-muted); }
+select { font: inherit; height: 36px; padding: 0 10px; border: 1px solid var(--nx-line-strong); border-radius: var(--nx-radius-md); background: var(--nx-surface); color: var(--nx-ink); }
+.seg { display: inline-flex; border: 1px solid var(--nx-line-strong); border-radius: var(--nx-radius-md); overflow: hidden; }
+.seg button { font: inherit; border: 0; background: var(--nx-surface); padding: 0 12px; height: 34px; font-weight: 600; color: var(--nx-ink-muted); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--nx-sumi-900); color: var(--nx-ink-inverse); }
+
+main { max-width: var(--nx-content-max); margin: 0 auto; padding: 24px 24px 64px; }
+section { padding: 40px 0; border-bottom: 1px solid var(--nx-line); }
+section:last-of-type { border-bottom: 0; }
+.eyebrow { font-size: var(--nx-text-caption); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--nx-action); margin: 0; }
+h1 { font-size: var(--nx-text-display); line-height: 1.15; font-weight: 800; margin: 8px 0 12px; letter-spacing: -0.02em; }
+h2 { font-size: var(--nx-text-h2); line-height: 1.3; margin: 4px 0 4px; letter-spacing: -0.01em; }
+h3 { font-size: var(--nx-text-h3); line-height: 1.4; margin: 0 0 8px; }
+p { margin: 0 0 8px; }
+.lead { font-size: var(--nx-text-body-lg); line-height: var(--nx-leading-reading); color: var(--nx-ink-muted); max-width: 66ch; margin: 0; }
+.companion { display: block; font-size: var(--nx-text-caption); color: var(--nx-ink-muted); font-weight: 500; margin-top: 2px; }
+.section-head { margin-bottom: 20px; }
+.section-head .companion { font-size: var(--nx-text-body-sm); }
+.grid { display: grid; gap: 16px; }
+.g2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.g3 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.card { background: var(--nx-surface); border: 1px solid var(--nx-line); border-radius: var(--nx-radius-lg); padding: 20px; }
+.muted { color: var(--nx-ink-muted); }
+.small { font-size: var(--nx-text-body-sm); }
+.row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.stack { display: grid; gap: 12px; }
+.label { font-size: var(--nx-text-caption); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--nx-ink-muted); margin: 0 0 8px; }
+
+/* Hierarki warna */
+.tier { display: flex; flex-direction: column; gap: 6px; min-height: 190px; }
+.tier .num { font-weight: 800; font-size: var(--nx-text-caption); letter-spacing: .08em; text-transform: uppercase; }
+.tier .name { font-size: var(--nx-text-h2); font-weight: 800; line-height: 1.2; }
+.tier .glyph { font-family: var(--nx-font-learn); font-size: 44px; line-height: 1; font-weight: 600; margin-top: auto; }
+.tier-white { background: var(--nx-shiro); }
+.tier-red { background: var(--nx-aka-700); border-color: var(--nx-aka-700); color: var(--nx-on-action); }
+.tier-black { background: var(--nx-sumi-950); border-color: var(--nx-sumi-950); color: var(--nx-sumi-50); }
+.tier-black .muted { color: var(--nx-sumi-300); }
+.tier-red .muted { color: var(--nx-on-action); }
+.proportion { display: flex; height: 14px; border-radius: var(--nx-radius-full); overflow: hidden; border: 1px solid var(--nx-line-strong); margin-top: 20px; }
+.proportion span:nth-child(1) { flex: 70; background: var(--nx-shiro); }
+.proportion span:nth-child(2) { flex: 15; background: var(--nx-aka-700); }
+.proportion span:nth-child(3) { flex: 15; background: var(--nx-sumi-900); }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 8px; font-size: var(--nx-text-body-sm); color: var(--nx-ink-muted); }
+
+/* Swatch palet */
+.swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 10px; margin: 8px 0 24px; }
+.swatch { border: 1px solid var(--nx-line); border-radius: var(--nx-radius-md); overflow: hidden; background: var(--nx-surface); font-size: var(--nx-text-caption); }
+.swatch .chip { height: 64px; display: flex; align-items: flex-end; justify-content: space-between; padding: 6px 8px; font-weight: 700; }
+.swatch .meta { padding: 8px; display: grid; gap: 2px; font-variant-numeric: tabular-nums; }
+.swatch .meta b { font-size: var(--nx-text-body-sm); }
+.pill { display: inline-flex; align-items: center; gap: 4px; padding: 1px 6px; border-radius: var(--nx-radius-sm); font-size: var(--nx-text-caption); font-weight: 700; }
+.pill-ok { background: var(--nx-success-bg); color: var(--nx-success); }
+.pill-ui { background: var(--nx-warning-bg); color: var(--nx-warning); }
+.pill-no { background: var(--nx-bg-muted); color: var(--nx-ink-muted); }
+
+/* Tipografi */
+.type-row { display: grid; grid-template-columns: 120px 1fr; gap: 16px; align-items: baseline; padding: 10px 0; border-bottom: 1px dashed var(--nx-line); }
+.type-row:last-child { border-bottom: 0; }
+.type-row code { font-family: var(--nx-font-mono); font-size: var(--nx-text-caption); color: var(--nx-ink-muted); }
+.t-display { font-size: var(--nx-text-display); font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; }
+.t-h1 { font-size: var(--nx-text-h1); font-weight: 700; line-height: 1.25; }
+.t-h2 { font-size: var(--nx-text-h2); font-weight: 700; line-height: 1.3; }
+.t-h3 { font-size: var(--nx-text-h3); font-weight: 600; line-height: 1.4; }
+.t-body-lg { font-size: var(--nx-text-body-lg); line-height: var(--nx-leading-reading); }
+.t-body-sm { font-size: var(--nx-text-body-sm); }
+.t-caption { font-size: var(--nx-text-caption); font-weight: 500; }
+.ruby-line { line-height: var(--nx-leading-ruby); font-size: var(--nx-text-body-lg); }
+.learn { font-family: var(--nx-font-learn); font-weight: 600; }
+.learn-row { display: flex; gap: 20px; flex-wrap: wrap; align-items: end; }
+.learn-row .learn { font-size: var(--nx-text-learn-lg); line-height: 1.1; }
+.learn-row .learn.xl { font-size: var(--nx-text-learn-xl); line-height: 1; }
+
+/* Tombol */
+.btn { font: inherit; display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 40px; padding: 0 16px; border-radius: var(--nx-radius-md); border: 1px solid transparent; font-weight: 600; cursor: pointer; transition: background var(--nx-duration-fast) var(--nx-ease-out), transform var(--nx-duration-fast) var(--nx-ease-out); }
+.btn:active { transform: scale(.98); }
+.btn-sm { height: 32px; padding: 0 12px; font-size: var(--nx-text-body-sm); }
+.btn-lg { height: 48px; padding: 0 20px; }
+.btn-primary { background: var(--nx-action); color: var(--nx-on-action); }
+.btn-primary:hover { background: var(--nx-action-hover); }
+.btn-primary:active { background: var(--nx-action-active); }
+.btn-secondary { background: var(--nx-sumi-900); color: var(--nx-ink-inverse); }
+.btn-secondary:hover { background: var(--nx-sumi-700); }
+.btn-outline { background: var(--nx-surface); color: var(--nx-ink); border-color: var(--nx-sumi-300); }
+.btn-outline:hover { background: var(--nx-bg-subtle); }
+.btn-ghost { background: transparent; color: var(--nx-ink); }
+.btn-ghost:hover { background: var(--nx-bg-muted); }
+.btn-danger { background: var(--nx-surface); color: var(--nx-danger); border-color: var(--nx-danger); }
+.btn-danger:hover { background: var(--nx-danger-bg); }
+.btn-link { background: transparent; color: var(--nx-action); padding: 0; height: auto; text-decoration: underline; text-underline-offset: 3px; }
+.btn[disabled] { background: var(--nx-bg-muted); color: var(--nx-sumi-400); border-color: transparent; cursor: not-allowed; }
+.btn.focus-demo { outline: 2px solid var(--nx-ring); outline-offset: 2px; }
+
+/* Form */
+.field { display: grid; gap: 6px; min-width: 220px; flex: 1; }
+.field label { font-size: var(--nx-text-body-sm); font-weight: 600; }
+.input { font: inherit; height: 40px; padding: 0 12px; border: 1px solid var(--nx-line-strong); border-radius: var(--nx-radius-md); background: var(--nx-surface); color: var(--nx-ink); width: 100%; }
+.input.is-focus { outline: 2px solid var(--nx-ring); outline-offset: 2px; }
+.input.is-error { border-color: var(--nx-danger); }
+.input[disabled] { background: var(--nx-bg-muted); color: var(--nx-ink-subtle); }
+.hint { font-size: var(--nx-text-caption); color: var(--nx-ink-muted); display: flex; gap: 4px; align-items: center; }
+.hint.err { color: var(--nx-danger); font-weight: 600; }
+
+/* Badge, tab, switch, checkbox */
+.badge { display: inline-flex; align-items: center; gap: 4px; height: 24px; padding: 0 8px; border-radius: var(--nx-radius-sm); font-size: var(--nx-text-caption); font-weight: 600; }
+.b-neutral { background: var(--nx-bg-muted); color: var(--nx-sumi-700); }
+.b-brand { background: var(--nx-action-subtle); color: var(--nx-aka-800); }
+.b-solid { background: var(--nx-sumi-900); color: var(--nx-ink-inverse); }
+.b-success { background: var(--nx-success-bg); color: var(--nx-success); }
+.b-warning { background: var(--nx-warning-bg); color: var(--nx-warning); }
+.b-danger { background: var(--nx-danger-bg); color: var(--nx-danger); }
+.tabs { display: flex; gap: 20px; border-bottom: 1px solid var(--nx-line); overflow-x: auto; }
+.tab { font: inherit; background: none; border: 0; padding: 10px 0; color: var(--nx-ink-muted); font-weight: 500; border-bottom: 2px solid transparent; margin-bottom: -1px; cursor: pointer; white-space: nowrap; }
+.tab[aria-selected="true"] { color: var(--nx-ink); font-weight: 700; border-bottom-color: var(--nx-action); }
+.switch { width: 44px; height: 26px; border-radius: var(--nx-radius-full); background: var(--nx-sumi-300); position: relative; border: 0; cursor: pointer; flex: none; }
+.switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: var(--nx-shiro); box-shadow: var(--nx-shadow-sm); transition: transform var(--nx-duration-base) var(--nx-ease-out); }
+.switch[aria-checked="true"] { background: var(--nx-action); }
+.switch[aria-checked="true"]::after { transform: translateX(18px); }
+.check { width: 20px; height: 20px; border-radius: var(--nx-radius-sm); border: 1px solid var(--nx-line-strong); display: inline-grid; place-items: center; flex: none; }
+.check.on { background: var(--nx-sumi-900); border-color: var(--nx-sumi-900); color: var(--nx-ink-inverse); }
+
+/* Kartu bab */
+.chapter { position: relative; display: grid; gap: 6px; }
+.chapter .no { font-size: var(--nx-text-caption); font-weight: 700; color: var(--nx-ink-muted); letter-spacing: .06em; text-transform: uppercase; }
+.chapter.locked { background: var(--nx-bg-subtle); color: var(--nx-ink-subtle); }
+.chapter.selected { border: 2px solid var(--nx-sumi-900); padding: 19px; }
+.meter { height: 6px; background: var(--nx-sumi-200); border-radius: var(--nx-radius-full); overflow: hidden; }
+.meter > span { display: block; height: 100%; background: var(--nx-action); }
+
+/* Demo teks Jepang */
+.ja-demo { display: grid; gap: 16px; grid-template-columns: minmax(220px, 280px) 1fr; }
+.side { background: var(--nx-bg-subtle); border: 1px solid var(--nx-line); border-radius: var(--nx-radius-lg); padding: 10px; display: grid; gap: 4px; align-content: start; }
+.nav-item { display: flex; gap: 12px; align-items: center; padding: 10px 12px; border-radius: var(--nx-radius-md); color: var(--nx-ink); border-left: 3px solid transparent; }
+.nav-item.active { background: var(--nx-action-subtle); color: var(--nx-aka-800); border-left-color: var(--nx-action); font-weight: 600; }
+.nav-item .companion { margin-top: 0; }
+.romaji { display: block; font-size: var(--nx-text-body-sm); color: var(--nx-ink-muted); margin-top: 4px; }
+.mode-picker { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.mode-picker button { font: inherit; font-size: var(--nx-text-body-sm); height: 34px; padding: 0 12px; border-radius: var(--nx-radius-full); border: 1px solid var(--nx-line-strong); background: var(--nx-surface); color: var(--nx-ink); cursor: pointer; }
+.mode-picker button[aria-pressed="true"] { background: var(--nx-sumi-900); border-color: var(--nx-sumi-900); color: var(--nx-ink-inverse); }
+.sentence { font-size: var(--nx-text-h3); line-height: var(--nx-leading-ruby); }
+
+/* Komponen belajar */
+.q-card { display: grid; gap: 16px; }
+.stimulus { text-align: center; font-family: var(--nx-font-learn); font-size: var(--nx-text-learn-lg); line-height: 1.1; font-weight: 600; padding: 12px 0; }
+.choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.choice { font: inherit; display: flex; gap: 12px; align-items: center; min-height: 52px; padding: 0 14px; border: 1px solid var(--nx-line-strong); border-radius: var(--nx-radius-md); background: var(--nx-surface); color: var(--nx-ink); font-size: var(--nx-text-body-lg); cursor: pointer; text-align: left; }
+.choice .k { width: 24px; height: 24px; border-radius: var(--nx-radius-sm); background: var(--nx-bg-muted); color: var(--nx-ink-muted); display: grid; place-items: center; font-size: var(--nx-text-caption); font-weight: 700; font-family: var(--nx-font-sans); flex: none; }
+.choice.selected { border: 2px solid var(--nx-sumi-900); padding: 0 13px; }
+.choice.correct { border: 2px solid var(--nx-success); background: var(--nx-success-bg); padding: 0 13px; }
+.feedback { display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center; padding: 14px 16px; border-radius: var(--nx-radius-lg); }
+.feedback .mark { font-size: 34px; line-height: 1; font-weight: 700; }
+.feedback.ok { background: var(--nx-success-bg); }
+.feedback.ok .mark, .feedback.ok .verdict { color: var(--nx-success); }
+.feedback.ng { background: var(--nx-danger-bg); }
+.feedback.ng .mark, .feedback.ng .verdict { color: var(--nx-danger); }
+.verdict { font-weight: 700; }
+.points { font-weight: 800; color: var(--nx-action); font-variant-numeric: tabular-nums; }
+.flashcard { min-height: 180px; display: grid; place-items: center; text-align: center; gap: 6px; border: 1px solid var(--nx-line); border-radius: var(--nx-radius-lg); background: var(--nx-surface); box-shadow: var(--nx-shadow-sm); }
+.flashcard .learn { font-size: var(--nx-text-learn-lg); line-height: 1; }
+.hanko { width: 104px; height: 104px; border-radius: 50%; border: 3px solid var(--nx-aka-700); box-shadow: inset 0 0 0 3px var(--nx-surface), inset 0 0 0 5px var(--nx-aka-700); color: var(--nx-aka-700); display: grid; place-items: center; text-align: center; font-family: var(--nx-font-learn); font-weight: 600; font-size: 16px; line-height: 1.15; transform: rotate(-8deg); }
+.hanko.sm { width: 44px; height: 44px; font-size: 20px; border-width: 2px; box-shadow: none; }
+.hanko.animate { animation: stamp var(--nx-duration-slow) var(--nx-ease-out) both; }
+@keyframes stamp { from { opacity: 0; transform: scale(1.4) rotate(-14deg); } to { opacity: 1; transform: scale(1) rotate(-8deg); } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .hanko.animate { animation-name: fade; } }
+.stamp-cell { display: grid; justify-items: center; gap: 10px; text-align: center; }
+.timer { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: var(--nx-radius-full); font-weight: 700; font-variant-numeric: tabular-nums; }
+.timer.normal { background: var(--nx-bg-muted); color: var(--nx-ink); }
+.timer.warn { background: var(--nx-warning-bg); color: var(--nx-warning); }
+.timer.danger { background: var(--nx-danger-bg); color: var(--nx-danger); }
+
+/* Mockup HP */
+.phone { width: 360px; max-width: 100%; border: 1px solid var(--nx-line-strong); border-radius: 28px; overflow: hidden; background: var(--nx-bg); box-shadow: var(--nx-shadow-lg); }
+.phone .brandbar { height: 3px; }
+.phone-top { display: flex; align-items: center; gap: 8px; height: 52px; padding: 0 14px; border-bottom: 1px solid var(--nx-line); background: var(--nx-surface); }
+.phone-top .logo { width: 28px; height: 28px; }
+.avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--nx-sumi-900); color: var(--nx-ink-inverse); display: grid; place-items: center; font-size: var(--nx-text-caption); font-weight: 700; }
+.phone-body { padding: 16px 14px; display: grid; gap: 12px; }
+.next { border-radius: var(--nx-radius-lg); padding: 14px; background: var(--nx-surface-inverse); color: var(--nx-sumi-50); position: relative; overflow: hidden; }
+.next::after { content: ""; position: absolute; right: -30px; top: -10px; width: 90px; height: 140px; background: var(--nx-aka-700); transform: skewX(-24deg); opacity: .9; }
+.next > * { position: relative; z-index: 1; }
+.next .eyebrow { color: var(--nx-aka-400); }
+.todo { display: grid; gap: 6px; font-size: var(--nx-text-body-sm); }
+.todo div { display: flex; justify-content: space-between; gap: 8px; }
+.bottomnav { display: grid; grid-template-columns: repeat(5, 1fr); border-top: 1px solid var(--nx-line); background: var(--nx-surface); height: var(--nx-bottomnav-h); }
+.bottomnav a { display: grid; justify-items: center; align-content: center; gap: 3px; font-size: 11px; color: var(--nx-ink-muted); text-decoration: none; font-weight: 600; }
+.bottomnav a.active { color: var(--nx-action); }
+
+/* Leaderboard */
+.podium { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; align-items: end; }
+.pod { background: var(--nx-surface-inverse); color: var(--nx-sumi-50); border-radius: var(--nx-radius-lg); padding: 14px; text-align: center; display: grid; gap: 4px; }
+.pod .rank { font-size: 34px; font-weight: 800; color: var(--nx-aka-400); line-height: 1; }
+.pod.first { padding-top: 26px; }
+.pod .pts { color: var(--nx-sumi-300); font-variant-numeric: tabular-nums; font-size: var(--nx-text-body-sm); }
+.lb-row { display: grid; grid-template-columns: 44px 1fr auto; gap: 12px; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--nx-line); font-variant-numeric: tabular-nums; }
+.lb-row .r { font-weight: 800; color: var(--nx-ink-muted); }
+.lb-row.me { background: var(--nx-action-subtle); border-left: 3px solid var(--nx-action); padding-left: 11px; }
+.live { display: inline-flex; align-items: center; gap: 6px; font-size: var(--nx-text-caption); font-weight: 700; color: var(--nx-action); text-transform: uppercase; letter-spacing: .06em; }
+.live::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--nx-action); animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .3; } }
+@media (prefers-reduced-motion: reduce) { .live::before { animation: none; } }
+
+footer { background: var(--nx-surface-inverse); color: var(--nx-sumi-300); padding: 32px 24px; }
+footer .inner { max-width: var(--nx-content-max); margin: 0 auto; display: grid; gap: 6px; font-size: var(--nx-text-body-sm); }
+footer b { color: var(--nx-sumi-50); }
+footer code { color: var(--nx-aka-400); font-family: var(--nx-font-mono); }
+
+@media (max-width: 720px) {
+  main { padding: 16px 16px 48px; }
+  .topbar { padding: 8px 16px; }
+  .ja-demo { grid-template-columns: 1fr; }
+  .type-row { grid-template-columns: 1fr; gap: 4px; }
+  h1 { font-size: 30px; }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4M12 17h.01"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2zM22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/></symbol>
+  <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+  <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+</svg>
+
+<div class="brandbar"></div>
+<header class="topbar">
+  <img class="logo" src="brand/NomaX_Group_Logo.jpg" alt="Logo NomaX">
+  <span class="wordmark"><b>NomaX</b> JP Learn</span>
+  <span class="spacer"></span>
+  <label class="control">あ
+    <select id="scriptPref" aria-label="Tampilan Jepang">
+      <option value="off">Mati</option>
+      <option value="kanji_furigana" selected>Kanji + furigana</option>
+      <option value="kana">Kana saja</option>
+      <option value="romaji">Romaji saja</option>
+      <option value="kanji_furigana_romaji">Kanji + furigana + romaji</option>
+    </select>
+  </label>
+  <div class="seg" role="group" aria-label="Bahasa UI">
+    <button type="button" data-lang="id" aria-pressed="true">ID</button>
+    <button type="button" data-lang="en" aria-pressed="false">EN</button>
+  </div>
+</header>
+
+<main>
+  <section id="hero" style="padding-top:16px">
+    <p class="eyebrow">Design System v1 · NomaX JP Learn</p>
+    <h1>Shiro · Aka · Sumi</h1>
+    <p class="lead">Kertas, stempel, dan tinta. Putih sebagai warna utama, merah sebagai warna sekunder untuk merek dan aksi, hitam sebagai warna ketiga untuk teks dan kontras. Semua nilai di halaman ini dibaca langsung dari <code>tokens.css</code>.</p>
+    <div class="grid g3" style="margin-top:24px">
+      <div class="card tier tier-white">
+        <span class="num">1 · Utama (dasar)</span>
+        <span class="name">Putih</span>
+        <span class="muted small">Latar halaman, kartu, ruang lega. Porsi ± 70%.</span>
+        <span class="glyph" lang="ja">白</span>
+      </div>
+      <div class="card tier tier-red">
+        <span class="num">2 · Sekunder</span>
+        <span class="name">Merah</span>
+        <span class="muted small">Merek, aksi utama, status aktif, koreksi. Hemat dan bermakna.</span>
+        <span class="glyph" lang="ja">赤</span>
+      </div>
+      <div class="card tier tier-black">
+        <span class="num">3 · Ketiga</span>
+        <span class="name">Hitam</span>
+        <span class="muted small">Teks, ikon, tombol sekunder, panel kontras.</span>
+        <span class="glyph" lang="ja">墨</span>
+      </div>
+    </div>
+    <div class="proportion" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="legend"><span>Putih ± 70%</span><span>Merah ± 15%</span><span>Hitam ± 15%</span></div>
+  </section>
+
+  <section id="palette">
+    <div class="section-head">
+      <h2>Palet</h2>
+      <p class="muted small">Kontras dihitung otomatis terhadap putih (WCAG). <span class="pill pill-ok">AA teks</span> ≥ 4.5 · <span class="pill pill-ui">UI</span> ≥ 3 · <span class="pill pill-no">dekor</span> &lt; 3</p>
+    </div>
+    <p class="label">Aka 赤 — merah (aka-900 = merah logo)</p>
+    <div class="swatches" data-group="aka"></div>
+    <p class="label">Sumi 墨 — hitam &amp; abu (sumi-500 = abu logo)</p>
+    <div class="swatches" data-group="sumi"></div>
+    <p class="label">Status — tokiwa 常磐 &amp; yamabuki 山吹</p>
+    <div class="swatches" data-group="status"></div>
+  </section>
+
+  <section id="type">
+    <div class="section-head">
+      <h2>Tipografi</h2>
+      <p class="muted small">Plus Jakarta Sans (Latin) · Noto Sans JP (Jepang) · Klee One (kartu belajar)</p>
+    </div>
+    <div class="card">
+      <div class="type-row"><code>display · 36</code><span class="t-display">Belajar Jepang bareng komunitas</span></div>
+      <div class="type-row"><code>h1 · 30</code><span class="t-h1">Latihan hari ini</span></div>
+      <div class="type-row"><code>h2 · 24</code><span class="t-h2">Bab 3 · Partikel <span lang="ja">を</span></span></div>
+      <div class="type-row"><code>h3 · 20</code><span class="t-h3">Kelemahanku minggu ini</span></div>
+      <div class="type-row"><code>body-lg · 18</code><span class="t-body-lg">Partikel <span lang="ja">を</span> menandai objek langsung dari kata kerja. Bacaan materi memakai ukuran ini.</span></div>
+      <div class="type-row"><code>body · 16</code><span>Teks umum antarmuka. Sapaan memakai "kamu".</span></div>
+      <div class="type-row"><code>body-sm · 14</code><span class="t-body-sm muted">Teks sekunder, isi tabel, keterangan.</span></div>
+      <div class="type-row"><code>caption · 12</code><span class="t-caption muted">LABEL KECIL · pendamping Jepang</span></div>
+      <div class="type-row"><code>ruby · lh 2.0</code><span class="ruby-line" lang="ja"><ruby>私<rp>(</rp><rt>わたし</rt><rp>)</rp></ruby>は<ruby>日本語<rp>(</rp><rt>にほんご</rt><rp>)</rp></ruby>を<ruby>勉強<rp>(</rp><rt>べんきょう</rt><rp>)</rp></ruby>します。</span></div>
+      <div class="type-row"><code>learn · Klee One</code>
+        <div class="learn-row" lang="ja"><span class="learn xl">あ</span><span class="learn">き</span><span class="learn">さ</span><span class="learn">り</span><span class="learn">学校</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="components">
+    <div class="section-head">
+      <h2>Komponen dasar</h2>
+      <p class="muted small">Satu tombol merah per bagian. Fokus = ring hitam + offset putih. Error = merah + ikon + teks.</p>
+    </div>
+    <div class="grid g2">
+      <div class="card stack">
+        <p class="label">Tombol</p>
+        <div class="row">
+          <button class="btn btn-primary">Mulai latihan</button>
+          <button class="btn btn-secondary">Lihat materi</button>
+          <button class="btn btn-outline">Batal</button>
+          <button class="btn btn-ghost">Lewati</button>
+        </div>
+        <div class="row">
+          <button class="btn btn-danger">Hapus materi</button>
+          <button class="btn btn-link">Lihat semua</button>
+          <button class="btn btn-primary focus-demo">Fokus</button>
+          <button class="btn" disabled>Nonaktif</button>
+        </div>
+        <div class="row">
+          <button class="btn btn-primary btn-sm">Kecil</button>
+          <button class="btn btn-primary">Sedang</button>
+          <button class="btn btn-primary btn-lg">Besar</button>
+        </div>
+      </div>
+      <div class="card stack">
+        <p class="label">Input</p>
+        <div class="row">
+          <div class="field"><label for="f1">Nama tampilan</label><input id="f1" class="input" value="Budi S."></div>
+          <div class="field"><label for="f2">Fokus</label><input id="f2" class="input is-focus" value="taberu"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="f3">Email</label><input id="f3" class="input is-error" value="budi@" aria-describedby="f3e"><span id="f3e" class="hint err"><svg class="i"><use href="#i-x"/></svg>Format email belum benar.</span></div>
+          <div class="field"><label for="f4">Username</label><input id="f4" class="input" value="budi.s" disabled><span class="hint">Tidak bisa diubah.</span></div>
+        </div>
+      </div>
+      <div class="card stack">
+        <p class="label">Badge</p>
+        <div class="row">
+          <span class="badge b-neutral">Draf</span><span class="badge b-brand">Bab terbuka</span><span class="badge b-solid">N5</span>
+          <span class="badge b-success"><svg class="i"><use href="#i-check"/></svg>Dinilai</span>
+          <span class="badge b-warning"><svg class="i"><use href="#i-alert"/></svg>Tenggat besok</span>
+          <span class="badge b-danger"><svg class="i"><use href="#i-x"/></svg>Terlambat</span>
+        </div>
+        <p class="label" style="margin-top:8px">Tab</p>
+        <div class="tabs" role="tablist">
+          <button class="tab" role="tab" aria-selected="false">Ringkasan</button>
+          <button class="tab" role="tab" aria-selected="false">Anggota</button>
+          <button class="tab" role="tab" aria-selected="true">Bab</button>
+          <button class="tab" role="tab" aria-selected="false">Materi</button>
+          <button class="tab" role="tab" aria-selected="false">Jadwal</button>
+        </div>
+      </div>
+      <div class="card stack">
+        <p class="label">Switch &amp; checkbox</p>
+        <div class="row"><button class="switch" role="switch" aria-checked="true" aria-label="Bab 1 terbuka"></button><span>Bab 1 · Salam <span class="muted small">terbuka 12 Sep</span></span></div>
+        <div class="row"><button class="switch" role="switch" aria-checked="false" aria-label="Bab 3 terkunci"></button><span>Bab 3 · Partikel <span lang="ja">を</span> <span class="muted small">terkunci</span></span></div>
+        <div class="row"><span class="check on"><svg class="i" style="width:14px;height:14px"><use href="#i-check"/></svg></span><span>Acak urutan soal</span></div>
+        <div class="row"><span class="check"></span><span>Tampilkan pembahasan setelah ditutup</span></div>
+      </div>
+    </div>
+    <p class="label" style="margin-top:20px">Kartu bab</p>
+    <div class="grid g3">
+      <div class="card chapter"><span class="no">Bab 1</span><h3>Salam</h3><div class="meter"><span style="width:72%"></span></div><span class="small muted">Mastery 72%</span></div>
+      <div class="card chapter selected"><span class="no">Bab 2 · dipilih</span><h3>Perkenalan</h3><div class="meter"><span style="width:38%"></span></div><span class="small muted">Mastery 38%</span></div>
+      <div class="card chapter locked"><span class="no">Bab 3</span><h3 class="row" style="gap:8px"><svg class="i"><use href="#i-lock"/></svg>Partikel <span lang="ja">を</span></h3><span class="small">Belum dibuka sensei</span></div>
+      <div class="card chapter" style="grid-template-columns:1fr auto"><div><span class="no">Buku Dasar · Bab 1</span><h3>Baris <span lang="ja">あ</span></h3><span class="small muted">Dikuasai</span></div><div class="hanko sm" lang="ja" aria-label="Selesai">済</div></div>
+    </div>
+  </section>
+
+  <section id="japanese">
+    <div class="section-head">
+      <h2>Teks Jepang pendamping</h2>
+      <p class="muted small">Ganti mode di bawah (atau di top bar) dan bahasa UI. Varian <b>pendamping</b> untuk navigasi, varian <b>konten</b> untuk materi. Soal dengan <code>jaDisplay: plain</code> tidak ikut berubah agar jawaban tidak bocor.</p>
+    </div>
+    <div class="mode-picker" role="group" aria-label="Mode tampilan Jepang">
+      <button type="button" data-mode="off">Mati</button>
+      <button type="button" data-mode="kanji_furigana">Kanji + furigana</button>
+      <button type="button" data-mode="kana">Kana</button>
+      <button type="button" data-mode="romaji">Romaji</button>
+      <button type="button" data-mode="kanji_furigana_romaji">Lengkap</button>
+    </div>
+    <div class="ja-demo">
+      <nav class="side" id="demoNav" aria-label="Contoh navigasi"></nav>
+      <div class="stack">
+        <div class="card">
+          <p class="label">Varian konten · kalimat contoh</p>
+          <div id="demoSentence" class="sentence"></div>
+          <p id="demoTranslation" class="muted small" style="margin-top:8px"></p>
+        </div>
+        <div class="card">
+          <p class="label">Soal membaca kanji · jaDisplay = plain</p>
+          <div class="stimulus" lang="ja" style="font-size:48px">学校</div>
+          <p class="muted small" style="text-align:center">Tetap kanji polos di semua mode: furigana, kana, dan romaji akan membocorkan jawaban.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="learning">
+    <div class="section-head">
+      <h2>Komponen belajar</h2>
+      <p class="muted small">Benar/salah memakai ○ / × (gaya koreksi guru Jepang) + teks. "Dipilih" sebelum dinilai = border hitam.</p>
+    </div>
+    <div class="grid g2">
+      <div class="card q-card">
+        <div>
+          <span id="qPrompt"></span>
+        </div>
+        <div class="stimulus" lang="ja">学校</div>
+        <div class="choices" lang="ja">
+          <button class="choice correct"><span class="k">1</span>がっこう</button>
+          <button class="choice"><span class="k">2</span>がくこう</button>
+          <button class="choice"><span class="k">3</span>かっこう</button>
+          <button class="choice selected"><span class="k">4</span>がっこ</button>
+        </div>
+        <div class="feedback ok" role="status">
+          <span class="mark" aria-hidden="true">○</span>
+          <div><span class="verdict"><span lang="ja">正解</span> · Benar!</span><br><span class="small"><span lang="ja"><ruby>学校<rt>がっこう</rt></ruby></span> <span lang="ja-Latn">gakkou</span> · sekolah</span></div>
+          <span class="points">+1</span>
+        </div>
+        <div class="feedback ng" role="status">
+          <span class="mark" aria-hidden="true">×</span>
+          <div><span class="verdict"><span lang="ja">不正解</span> · Belum tepat</span><br><span class="small">Jawaban yang benar: <span lang="ja">がっこう</span></span></div>
+          <button class="btn btn-sm btn-secondary">Lanjut ⏎</button>
+        </div>
+      </div>
+      <div class="stack">
+        <div class="grid" style="grid-template-columns:1fr 1fr">
+          <div class="flashcard"><div><div class="learn" lang="ja">食</div><span class="small muted">depan · Spasi untuk balik</span></div></div>
+          <div class="flashcard"><div><div lang="ja" style="font-size:22px"><ruby>食<rt>た</rt></ruby>べる</div><span class="small">makan · <span lang="ja-Latn">taberu</span></span></div></div>
+        </div>
+        <div class="row"><button class="btn btn-outline">Belum ingat</button><button class="btn btn-primary">Ingat</button></div>
+        <div class="card">
+          <p class="label">Stempel hanko</p>
+          <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(110px,1fr))">
+            <div class="stamp-cell"><div class="hanko animate" lang="ja" aria-label="Bagus sekali">よくでき<br>ました</div><span class="small muted">≥ 80%</span></div>
+            <div class="stamp-cell"><div class="hanko animate" lang="ja" aria-label="Kamu sudah berusaha">がんばり<br>ました</div><span class="small muted">50–79%</span></div>
+            <div class="stamp-cell"><div class="hanko animate" lang="ja" aria-label="Ayo terus semangat">がんばり<br>ましょう</div><span class="small muted">&lt; 50%</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <p class="label">Timer kuis</p>
+          <div class="row">
+            <span class="timer normal"><svg class="i"><use href="#i-clock"/></svg>12:30</span>
+            <span class="timer warn"><svg class="i"><use href="#i-alert"/></svg>04:59</span>
+            <span class="timer danger"><svg class="i"><use href="#i-alert"/></svg>00:42</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="screens">
+    <div class="section-head">
+      <h2>Layar contoh</h2>
+      <p class="muted small">Beranda murid di HP (360 px) dan leaderboard live. Area merah luas hanya untuk satu momen merek per layar.</p>
+    </div>
+    <div class="grid g2" style="align-items:start">
+      <div class="phone" aria-label="Contoh beranda murid">
+        <div class="brandbar"></div>
+        <div class="phone-top">
+          <img class="logo" src="brand/NomaX_Group_Logo.jpg" alt="">
+          <span class="wordmark" style="font-size:14px"><b>NomaX</b> JP Learn</span>
+          <span style="flex:1"></span>
+          <span class="avatar">B</span>
+        </div>
+        <div class="phone-body">
+          <div><div class="t-h3" style="font-weight:700">Halo, Budi!</div><span class="companion" lang="ja">こんにちは</span></div>
+          <div class="next">
+            <p class="eyebrow">Berikutnya · Rab 19.00 WIB</p>
+            <div style="font-weight:700;margin:4px 0">N5 Sabtu Pagi · Bab 3</div>
+            <div class="small" style="margin-bottom:10px">Partikel <span lang="ja">を</span> · Zoom</div>
+            <button class="btn btn-primary btn-sm">Gabung</button>
+          </div>
+          <div class="card" style="padding:14px">
+            <p class="label">Yang harus dikerjakan</p>
+            <div class="todo">
+              <div><span>Kuis Bab 3</span><span class="badge b-warning">tutup Jum 21.00</span></div>
+              <div><span>Tugas menulis</span><span class="muted">2 hari lagi</span></div>
+            </div>
+          </div>
+          <div class="card" style="padding:14px">
+            <p class="label">Lanjutkan latihan</p>
+            <p class="small">Terlemah: baris <span lang="ja">さ</span> (4 item)</p>
+            <button class="btn btn-secondary btn-sm">Latih sekarang</button>
+          </div>
+        </div>
+        <nav class="bottomnav" aria-label="Navigasi murid">
+          <a class="active" href="#screens"><svg class="i"><use href="#i-home"/></svg>Beranda</a>
+          <a href="#screens"><svg class="i"><use href="#i-book"/></svg>Materi</a>
+          <a href="#screens"><svg class="i"><use href="#i-pencil"/></svg>Latihan</a>
+          <a href="#screens"><svg class="i"><use href="#i-cal"/></svg>Jadwal</a>
+          <a href="#screens"><svg class="i"><use href="#i-trophy"/></svg>Peringkat</a>
+        </nav>
+      </div>
+      <div class="stack">
+        <div class="row" style="justify-content:space-between">
+          <h3 style="margin:0">Peringkat N5 · Musim 1</h3>
+          <span class="live">Live</span>
+        </div>
+        <div class="podium">
+          <div class="pod"><span class="rank">2</span><b>Sari</b><span class="pts">405 poin</span></div>
+          <div class="pod first"><span class="rank">1</span><b>Rina</b><span class="pts">418 poin</span></div>
+          <div class="pod"><span class="rank">3</span><b>Dimas</b><span class="pts">377 poin</span></div>
+        </div>
+        <div class="card" style="padding:0;overflow:hidden">
+          <div class="lb-row me"><span class="r">4</span><b>Budi (kamu)</b><span>312</span></div>
+          <div class="lb-row"><span class="r">5</span><span>Anisa</span><span>298.5</span></div>
+          <div class="lb-row"><span class="r">5</span><span>Yoga</span><span>298.5</span></div>
+          <div class="lb-row" style="border-bottom:0"><span class="r">7</span><span>Lia</span><span>251</span></div>
+        </div>
+        <p class="muted small">Poin sama berbagi peringkat (5, 5, lalu 7). Hanya nama tampilan dan poin yang terlihat.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="inner">
+    <b>NomaX JP Learn · Design System v1</b>
+    <span>Sumber nilai: <code>design/tokens.css</code> · Pemetaan Tailwind/shadcn: <code>design/tailwind-theme.css</code> · Dokumentasi: <code>docs/07-desain-ui-ux.md</code></span>
+    <span>Halaman ini hanya memakai variabel <code>--nx-*</code>. Ubah token, muat ulang, dan seluruh pratinjau ikut berubah.</span>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const root = getComputedStyle(document.documentElement);
+  const token = (name) => root.getPropertyValue('--nx-' + name).trim();
+
+  // Kontras WCAG
+  const lin = (c) => { c /= 255; return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
+  const lum = (hex) => {
+    const h = hex.replace('#', '');
+    const n = h.length === 3 ? h.split('').map((x) => x + x).join('') : h;
+    const [r, g, b] = [0, 2, 4].map((i) => parseInt(n.slice(i, i + 2), 16));
+    return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+  };
+  const contrast = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
+
+  // Swatch palet, dibaca langsung dari tokens.css
+  const steps = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
+  const groups = {
+    aka: steps.map((s) => 'aka-' + s),
+    sumi: ['shiro', ...steps.map((s) => 'sumi-' + s), 'kuro'],
+    status: ['tokiwa-50', 'tokiwa-100', 'tokiwa-600', 'tokiwa-700', 'yamabuki-50', 'yamabuki-100', 'yamabuki-400', 'yamabuki-700'],
+  };
+  const notes = { 'aka-700': 'AKSI', 'aka-900': 'LOGO', 'sumi-500': 'LOGO', 'sumi-900': 'TEKS', 'kuro': 'LOGO', 'shiro': 'DASAR' };
+  const white = token('shiro'), ink = token('sumi-900');
+  document.querySelectorAll('.swatches').forEach((box) => {
+    groups[box.dataset.group].forEach((name) => {
+      const hex = token(name);
+      if (!hex) return;
+      const cw = contrast(hex, white);
+      const onWhite = cw >= contrast(hex, ink);
+      const grade = cw >= 4.5 ? ['pill-ok', 'AA teks'] : cw >= 3 ? ['pill-ui', 'UI'] : ['pill-no', 'dekor'];
+      const el = document.createElement('div');
+      el.className = 'swatch';
+      el.innerHTML =
+        `<div class="chip" style="background:var(--nx-${name});color:var(--nx-${onWhite ? 'shiro' : 'sumi-900'})">` +
+        `<span>${notes[name] || ''}</span><span>Aa</span></div>` +
+        `<div class="meta"><b>${name}</b><span>${hex.toUpperCase()}</span>` +
+        `<span>${cw.toFixed(2)} : 1 <span class="pill ${grade[0]}">${grade[1]}</span></span></div>`;
+      box.appendChild(el);
+    });
+  });
+
+  // Interaksi kecil
+  document.querySelectorAll('.switch').forEach((s) => s.addEventListener('click', () => {
+    s.setAttribute('aria-checked', String(s.getAttribute('aria-checked') !== 'true'));
+  }));
+  document.querySelectorAll('.tabs').forEach((list) => list.addEventListener('click', (e) => {
+    const tab = e.target.closest('.tab');
+    if (!tab) return;
+    list.querySelectorAll('.tab').forEach((t) => t.setAttribute('aria-selected', String(t === tab)));
+  }));
+})();
+</script>
+<script>
+// Demo teks Jepang pendamping — mengikuti aturan docs/06 §4 (romaji sudah dihitung, karena pratinjau tanpa WanaKana).
+(() => {
+  const nav = [
+    { icon: 'home', id: 'Beranda', en: 'Home', ja: [{ t: 'ホーム' }], ro: 'hoomu' },
+    { icon: 'book', id: 'Materi', en: 'Materials', ja: [{ t: '教材', r: 'きょうざい' }], ro: 'kyouzai' },
+    { icon: 'pencil', id: 'Latihan', en: 'Practice', ja: [{ t: '練習', r: 'れんしゅう' }], ro: 'renshuu', active: true },
+    { icon: 'cal', id: 'Jadwal', en: 'Schedule', ja: [{ t: '予定', r: 'よてい' }], ro: 'yotei' },
+    { icon: 'trophy', id: 'Peringkat', en: 'Leaderboard', ja: [{ t: 'ランキング' }], ro: 'rankingu' },
+  ];
+  const sentence = {
+    id: 'Saya belajar bahasa Jepang.', en: 'I study Japanese.',
+    ja: [{ t: '私', r: 'わたし' }, { t: 'は' }, { t: '日本語', r: 'にほんご' }, { t: 'を' }, { t: '勉強', r: 'べんきょう' }, { t: 'します。' }],
+    ro: 'watashi wa nihongo o benkyou shimasu.',
+  };
+  const prompt = {
+    id: 'Pilih bacaan yang benar', en: 'Choose the correct reading',
+    ja: [{ t: '正', r: 'ただ' }, { t: 'しい' }, { t: '読', r: 'よ' }, { t: 'み' }, { t: '方', r: 'かた' }, { t: 'を' }, { t: '選', r: 'えら' }, { t: 'んでください' }],
+    ro: 'tadashii yomikata o erande kudasai',
+  };
+
+  const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const ruby = (segs) => segs.map((s) => (s.r ? `<ruby>${esc(s.t)}<rp>(</rp><rt>${esc(s.r)}</rt><rp>)</rp></ruby>` : esc(s.t))).join('');
+  const plain = (segs) => segs.map((s) => esc(s.t)).join('');
+  const kana = (segs) => segs.map((s) => esc(s.r || s.t)).join('');
+  const ja = (html) => `<span lang="ja">${html}</span>`;
+  const latn = (text) => `<span lang="ja-Latn">${esc(text)}</span>`;
+
+  const companion = (item, mode) => ({
+    off: '',
+    kanji_furigana: ja(ruby(item.ja)),
+    kana: ja(kana(item.ja)),
+    romaji: latn(item.ro),
+    kanji_furigana_romaji: `${ja(ruby(item.ja))} · ${latn(item.ro)}`,
+  })[mode];
+
+  const content = (item, mode) => {
+    const line = `<span class="romaji" lang="ja-Latn">${esc(item.ro)}</span>`;
+    return ({
+      off: ja(plain(item.ja)),
+      kanji_furigana: ja(ruby(item.ja)),
+      kana: ja(kana(item.ja)),
+      romaji: ja(plain(item.ja)) + line,
+      kanji_furigana_romaji: ja(ruby(item.ja)) + line,
+    })[mode];
+  };
+
+  const state = { mode: 'kanji_furigana', lang: 'id' };
+
+  function render() {
+    document.documentElement.lang = state.lang;
+    document.getElementById('demoNav').innerHTML = nav.map((item) => {
+      const comp = companion(item, state.mode);
+      return `<div class="nav-item${item.active ? ' active' : ''}"><svg class="i"><use href="#i-${item.icon}"/></svg>` +
+        `<div><div>${esc(item[state.lang])}</div>${comp ? `<span class="companion">${comp}</span>` : ''}</div></div>`;
+    }).join('');
+    document.getElementById('demoSentence').innerHTML = content(sentence, state.mode);
+    document.getElementById('demoTranslation').textContent = sentence[state.lang];
+    const pc = companion(prompt, state.mode);
+    document.getElementById('qPrompt').innerHTML = `<b>${esc(prompt[state.lang])}</b>${pc ? `<span class="companion">${pc}</span>` : ''}`;
+    document.getElementById('scriptPref').value = state.mode;
+    document.querySelectorAll('[data-mode]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.mode === state.mode)));
+    document.querySelectorAll('[data-lang]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.lang === state.lang)));
+  }
+
+  document.getElementById('scriptPref').addEventListener('change', (e) => { state.mode = e.target.value; render(); });
+  document.querySelectorAll('[data-mode]').forEach((b) => b.addEventListener('click', () => { state.mode = b.dataset.mode; render(); }));
+  document.querySelectorAll('[data-lang]').forEach((b) => b.addEventListener('click', () => { state.lang = b.dataset.lang; render(); }));
+  render();
+})();
+</script>
+</body>
+</html>

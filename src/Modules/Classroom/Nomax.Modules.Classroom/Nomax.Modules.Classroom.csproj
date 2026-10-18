@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Classroom module (docs/02 §3): classes, members, chapter unlocks, schedule, ICS feed, notifications and web push. -->
+  <PropertyGroup>
+    <RootNamespace>Nomax.Modules.Classroom</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\Nomax.BuildingBlocks\Nomax.BuildingBlocks.csproj" />
+    <ProjectReference Include="..\Nomax.Modules.Classroom.Contracts\Nomax.Modules.Classroom.Contracts.csproj" />
+    <ProjectReference Include="..\..\Content\Nomax.Modules.Content.Contracts\Nomax.Modules.Content.Contracts.csproj" />
+    <ProjectReference Include="..\..\Identity\Nomax.Modules.Identity.Contracts\Nomax.Modules.Identity.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Nomax.Modules.Classroom.Tests" />
+    <InternalsVisibleTo Include="Nomax.IntegrationTests" />
+  </ItemGroup>
+</Project>

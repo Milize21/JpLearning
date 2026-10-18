@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Module boundaries of docs/02 §6.1. New modules are picked up automatically through Nomax.Api. -->
+  <ItemGroup>
+    <PackageReference Include="NetArchTest.eNhancedEdition" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Nomax.Api\Nomax.Api.csproj" />
+    <ProjectReference Include="..\..\src\Nomax.Gateway\Nomax.Gateway.csproj" Aliases="gateway" />
+  </ItemGroup>
+</Project>

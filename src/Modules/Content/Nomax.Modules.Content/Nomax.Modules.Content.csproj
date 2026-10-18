@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Content module (docs/02 §3): levels, books, chapters, materials, files (tus upload + signed download), reference data. -->
+  <PropertyGroup>
+    <RootNamespace>Nomax.Modules.Content</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- tus resumable uploads (D-05), MIT. -->
+    <PackageReference Include="tusdotnet" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\Nomax.BuildingBlocks\Nomax.BuildingBlocks.csproj" />
+    <ProjectReference Include="..\Nomax.Modules.Content.Contracts\Nomax.Modules.Content.Contracts.csproj" />
+    <ProjectReference Include="..\..\Classroom\Nomax.Modules.Classroom.Contracts\Nomax.Modules.Classroom.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Nomax.Modules.Content.Tests" />
+    <InternalsVisibleTo Include="Nomax.IntegrationTests" />
+  </ItemGroup>
+</Project>

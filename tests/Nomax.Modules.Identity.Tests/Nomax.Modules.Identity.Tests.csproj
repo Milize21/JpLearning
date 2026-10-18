@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Unit tests of the Identity module: BR-AKUN rules and the Keycloak admin client against a fake HTTP handler. -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Modules\Identity\Nomax.Modules.Identity\Nomax.Modules.Identity.csproj" />
+  </ItemGroup>
+</Project>

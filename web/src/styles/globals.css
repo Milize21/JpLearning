@@ -1,0 +1,29 @@
+/* Design tokens come from design/ (docs/07 §15). No color, font or radius values may be written here. */
+@import "tailwindcss";
+@import "../../../design/tailwind-theme.css";
+
+@utility leading-ruby {
+  line-height: var(--nx-leading-ruby);
+}
+
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@layer base {
+  body {
+    min-height: 100dvh;
+    font-size: var(--nx-text-body);
+    line-height: var(--nx-leading-normal);
+  }
+
+  /* Gerak dikurangi (docs/07 §9): no movement, at most a short fade. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: var(--nx-duration-base) !important;
+      transition-duration: var(--nx-duration-base) !important;
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "printWidth": 110,
+  "singleQuote": false,
+  "trailingComma": "all",
+  "endOfLine": "lf",
+  "overrides": [
+    {
+      "files": "src/i18n/labels/*.ts",
+      "excludeFiles": "src/i18n/labels/*.test.ts",
+      "options": { "printWidth": 1000 }
+    }
+  ]
+}

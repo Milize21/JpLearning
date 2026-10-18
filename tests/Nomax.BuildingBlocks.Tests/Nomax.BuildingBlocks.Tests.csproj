@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Unit tests for Nomax.SharedKernel and Nomax.BuildingBlocks. No database, network or Docker needed. -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\BuildingBlocks\Nomax.BuildingBlocks\Nomax.BuildingBlocks.csproj" />
+  </ItemGroup>
+</Project>

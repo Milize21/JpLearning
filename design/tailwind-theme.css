@@ -1,0 +1,226 @@
+/*
+ * Pemetaan design tokens NomaX → Tailwind CSS v4 + variabel shadcn/ui.
+ *
+ * Dipakai di web/src/styles/globals.css (dibuat di Fase 0):
+ *   @import "tailwindcss";
+ *   @import "../../../design/tailwind-theme.css";
+ *
+ * Aturan: JANGAN menulis nilai warna di file ini. Selalu var(--nx-*) dari tokens.css.
+ */
+@import "./tokens.css";
+
+/* 1) Matikan palet warna bawaan Tailwind.
+ *    Akibatnya bg-red-500, text-gray-600, border-zinc-200, dst. TIDAK menghasilkan CSS.
+ *    Ini disengaja: semua warna wajib lewat token NomaX di bawah. */
+@theme {
+  --color-*: initial;
+}
+
+/* 2) Token NomaX sebagai utilitas Tailwind */
+@theme inline {
+  /* Dasar */
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-white: var(--nx-shiro);
+  --color-black: var(--nx-kuro);
+  --color-shiro: var(--nx-shiro);
+  --color-kuro: var(--nx-kuro);
+
+  /* Palet aka (merah) */
+  --color-aka-50: var(--nx-aka-50);
+  --color-aka-100: var(--nx-aka-100);
+  --color-aka-200: var(--nx-aka-200);
+  --color-aka-300: var(--nx-aka-300);
+  --color-aka-400: var(--nx-aka-400);
+  --color-aka-500: var(--nx-aka-500);
+  --color-aka-600: var(--nx-aka-600);
+  --color-aka-700: var(--nx-aka-700);
+  --color-aka-800: var(--nx-aka-800);
+  --color-aka-900: var(--nx-aka-900);
+  --color-aka-950: var(--nx-aka-950);
+
+  /* Palet sumi (hitam/abu) */
+  --color-sumi-50: var(--nx-sumi-50);
+  --color-sumi-100: var(--nx-sumi-100);
+  --color-sumi-200: var(--nx-sumi-200);
+  --color-sumi-300: var(--nx-sumi-300);
+  --color-sumi-400: var(--nx-sumi-400);
+  --color-sumi-500: var(--nx-sumi-500);
+  --color-sumi-600: var(--nx-sumi-600);
+  --color-sumi-700: var(--nx-sumi-700);
+  --color-sumi-800: var(--nx-sumi-800);
+  --color-sumi-900: var(--nx-sumi-900);
+  --color-sumi-950: var(--nx-sumi-950);
+
+  /* Palet status */
+  --color-tokiwa-50: var(--nx-tokiwa-50);
+  --color-tokiwa-100: var(--nx-tokiwa-100);
+  --color-tokiwa-600: var(--nx-tokiwa-600);
+  --color-tokiwa-700: var(--nx-tokiwa-700);
+  --color-yamabuki-50: var(--nx-yamabuki-50);
+  --color-yamabuki-100: var(--nx-yamabuki-100);
+  --color-yamabuki-400: var(--nx-yamabuki-400);
+  --color-yamabuki-700: var(--nx-yamabuki-700);
+
+  /* Semantik NomaX — pilihan utama di komponen */
+  --color-canvas: var(--nx-bg);
+  --color-canvas-subtle: var(--nx-bg-subtle);
+  --color-canvas-muted: var(--nx-bg-muted);
+  --color-surface: var(--nx-surface);
+  --color-surface-inverse: var(--nx-surface-inverse);
+  --color-ink: var(--nx-ink);
+  --color-ink-muted: var(--nx-ink-muted);
+  --color-ink-subtle: var(--nx-ink-subtle);
+  --color-ink-inverse: var(--nx-ink-inverse);
+  --color-line: var(--nx-line);
+  --color-line-strong: var(--nx-line-strong);
+  --color-brand: var(--nx-brand);
+  --color-action: var(--nx-action);
+  --color-action-hover: var(--nx-action-hover);
+  --color-action-active: var(--nx-action-active);
+  --color-action-subtle: var(--nx-action-subtle);
+  --color-on-action: var(--nx-on-action);
+  --color-success: var(--nx-success);
+  --color-success-bg: var(--nx-success-bg);
+  --color-warning: var(--nx-warning);
+  --color-warning-bg: var(--nx-warning-bg);
+  --color-danger: var(--nx-danger);
+  --color-danger-bg: var(--nx-danger-bg);
+  --color-info: var(--nx-info);
+  --color-info-bg: var(--nx-info-bg);
+
+  /* Variabel shadcn/ui sebagai utilitas (bg-primary, text-muted-foreground, dst.) */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Font */
+  --font-sans: var(--nx-font-sans);
+  --font-ja: var(--nx-font-ja);
+  --font-learn: var(--nx-font-learn);
+  --font-mono: var(--nx-font-mono);
+
+  /* Ukuran teks bernama (text-display, text-h1, …, text-learn-xl) */
+  --text-display: var(--nx-text-display);
+  --text-display--line-height: 1.2;
+  --text-h1: var(--nx-text-h1);
+  --text-h1--line-height: 1.25;
+  --text-h2: var(--nx-text-h2);
+  --text-h2--line-height: 1.3;
+  --text-h3: var(--nx-text-h3);
+  --text-h3--line-height: 1.4;
+  --text-body-lg: var(--nx-text-body-lg);
+  --text-body-lg--line-height: var(--nx-leading-reading);
+  --text-body: var(--nx-text-body);
+  --text-body--line-height: var(--nx-leading-normal);
+  --text-body-sm: var(--nx-text-body-sm);
+  --text-body-sm--line-height: 1.5;
+  --text-caption: var(--nx-text-caption);
+  --text-caption--line-height: 1.4;
+  --text-learn-lg: var(--nx-text-learn-lg);
+  --text-learn-lg--line-height: 1.1;
+  --text-learn-xl: var(--nx-text-learn-xl);
+  --text-learn-xl--line-height: 1;
+
+  /* Radius, bayangan, easing */
+  --radius-sm: var(--nx-radius-sm);
+  --radius-md: var(--nx-radius-md);
+  --radius-lg: var(--nx-radius-lg);
+  --radius-xl: var(--nx-radius-xl);
+  --shadow-sm: var(--nx-shadow-sm);
+  --shadow-md: var(--nx-shadow-md);
+  --shadow-lg: var(--nx-shadow-lg);
+  --ease-out: var(--nx-ease-out);
+  --ease-in-out: var(--nx-ease-in-out);
+}
+
+/* 3) Variabel shadcn/ui → token NomaX.
+ *    Catatan istilah: "primary" shadcn = tombol aksi utama (merah), BUKAN "warna utama" pemilik proyek (putih). */
+:root {
+  --background: var(--nx-bg);
+  --foreground: var(--nx-ink);
+  --card: var(--nx-surface);
+  --card-foreground: var(--nx-ink);
+  --popover: var(--nx-surface);
+  --popover-foreground: var(--nx-ink);
+  --primary: var(--nx-action);              /* tombol aksi utama = merah aka-700 */
+  --primary-foreground: var(--nx-on-action);
+  --secondary: var(--nx-sumi-900);          /* tombol sekunder = hitam */
+  --secondary-foreground: var(--nx-shiro);
+  --muted: var(--nx-bg-muted);
+  --muted-foreground: var(--nx-ink-muted);
+  --accent: var(--nx-action-subtle);        /* hover/terpilih ringan */
+  --accent-foreground: var(--nx-aka-800);
+  --destructive: var(--nx-danger);
+  --border: var(--nx-line);
+  --input: var(--nx-line-strong);
+  --ring: var(--nx-ring);
+  --radius: var(--nx-radius-md);
+  --chart-1: var(--nx-aka-700);
+  --chart-2: var(--nx-sumi-900);
+  --chart-3: var(--nx-sumi-400);
+  --chart-4: var(--nx-aka-300);
+  --chart-5: var(--nx-tokiwa-600);
+  --sidebar: var(--nx-bg-subtle);
+  --sidebar-foreground: var(--nx-ink);
+  --sidebar-primary: var(--nx-action);
+  --sidebar-primary-foreground: var(--nx-on-action);
+  --sidebar-accent: var(--nx-action-subtle);
+  --sidebar-accent-foreground: var(--nx-aka-800);
+  --sidebar-border: var(--nx-line);
+  --sidebar-ring: var(--nx-ring);
+}
+
+/* 4) Gaya dasar */
+@layer base {
+  html {
+    font-family: var(--nx-font-sans);
+    color: var(--nx-ink);
+    background: var(--nx-bg);
+    -webkit-font-smoothing: antialiased;
+  }
+  :lang(ja) {
+    font-family: var(--nx-font-ja);
+    font-style: normal;      /* teks Jepang tidak pernah miring */
+    letter-spacing: normal;
+  }
+  :lang(ja-Latn) {
+    font-family: var(--nx-font-sans);   /* romaji memakai font Latin */
+  }
+  ruby rt {
+    font-size: 0.5em;
+    color: var(--nx-ink-muted);
+  }
+  :focus-visible {
+    outline: 2px solid var(--nx-ring);
+    outline-offset: 2px;
+  }
+}

@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Identity module (docs/02 §3): profiles and preferences, account management through the Keycloak Admin API. -->
+  <PropertyGroup>
+    <RootNamespace>Nomax.Modules.Identity</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\Nomax.BuildingBlocks\Nomax.BuildingBlocks.csproj" />
+    <ProjectReference Include="..\Nomax.Modules.Identity.Contracts\Nomax.Modules.Identity.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Nomax.Modules.Identity.Tests" />
+    <InternalsVisibleTo Include="Nomax.IntegrationTests" />
+  </ItemGroup>
+</Project>

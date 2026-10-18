@@ -1,0 +1,31 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Nomax.Api/Nomax.Api.csproj" />
+    <Project Path="src/Nomax.Gateway/Nomax.Gateway.csproj" />
+  </Folder>
+  <Folder Name="/src/BuildingBlocks/">
+    <Project Path="src/BuildingBlocks/Nomax.BuildingBlocks/Nomax.BuildingBlocks.csproj" />
+    <Project Path="src/BuildingBlocks/Nomax.SharedKernel/Nomax.SharedKernel.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/" />
+  <Folder Name="/src/Modules/Identity/">
+    <Project Path="src/Modules/Identity/Nomax.Modules.Identity.Contracts/Nomax.Modules.Identity.Contracts.csproj" />
+    <Project Path="src/Modules/Identity/Nomax.Modules.Identity/Nomax.Modules.Identity.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Content/">
+    <Project Path="src/Modules/Content/Nomax.Modules.Content.Contracts/Nomax.Modules.Content.Contracts.csproj" />
+    <Project Path="src/Modules/Content/Nomax.Modules.Content/Nomax.Modules.Content.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Classroom/">
+    <Project Path="src/Modules/Classroom/Nomax.Modules.Classroom.Contracts/Nomax.Modules.Classroom.Contracts.csproj" />
+    <Project Path="src/Modules/Classroom/Nomax.Modules.Classroom/Nomax.Modules.Classroom.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Nomax.ArchitectureTests/Nomax.ArchitectureTests.csproj" />
+    <Project Path="tests/Nomax.BuildingBlocks.Tests/Nomax.BuildingBlocks.Tests.csproj" />
+    <Project Path="tests/Nomax.IntegrationTests/Nomax.IntegrationTests.csproj" />
+    <Project Path="tests/Nomax.Modules.Identity.Tests/Nomax.Modules.Identity.Tests.csproj" />
+    <Project Path="tests/Nomax.Modules.Content.Tests/Nomax.Modules.Content.Tests.csproj" />
+    <Project Path="tests/Nomax.Modules.Classroom.Tests/Nomax.Modules.Classroom.Tests.csproj" />
+  </Folder>
+</Solution>

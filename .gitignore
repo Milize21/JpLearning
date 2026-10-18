@@ -1,0 +1,41 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.rsuser
+TestResults/
+coverage/
+*.coverage
+*.trx
+
+# IDE
+.vs/
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Node / web
+node_modules/
+web/dist/
+web/playwright-report/
+web/test-results/
+web/blob-report/
+
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+*.pfx
+*.key
+
+# Runtime data
+storage/
+.live/
+
+# Claude Code personal settings
+.claude/settings.local.json
+
+# OS
+.DS_Store
+Thumbs.db

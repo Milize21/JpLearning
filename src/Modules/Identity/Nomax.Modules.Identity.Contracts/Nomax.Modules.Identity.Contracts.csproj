@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Public surface of the Identity module for other modules (docs/02 §6.2). SharedKernel only. -->
+  <PropertyGroup>
+    <RootNamespace>Nomax.Modules.Identity.Contracts</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\Nomax.SharedKernel\Nomax.SharedKernel.csproj" />
+  </ItemGroup>
+</Project>

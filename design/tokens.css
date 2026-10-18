@@ -1,0 +1,162 @@
+/*
+ * NomaX JP Learn — Design Tokens v1
+ *
+ * SATU-SATUNYA sumber nilai warna, tipografi, radius, bayangan, motion, dan layout.
+ * Hierarki warna (permintaan pemilik proyek):
+ *   1) Putih  — Shiro 白 — warna utama/dasar (kertas)
+ *   2) Merah  — Aka 赤   — warna sekunder: merek & aksi (stempel hanko, tinta koreksi)
+ *   3) Hitam  — Sumi 墨  — warna ketiga: teks & kontras (tinta kaligrafi)
+ *
+ * Dokumentasi: docs/07-desain-ui-ux.md · Pratinjau: design/preview.html
+ * Mengubah nilai = ubah file ini + tabel di docs/07 + cek kontras (teks >= 4.5:1, komponen UI >= 3:1).
+ * File ini framework-agnostic (CSS custom properties biasa). Pemetaan Tailwind/shadcn ada di tailwind-theme.css.
+ */
+
+:root {
+  /* ── Palet dasar ───────────────────────────────────────────────────────── */
+
+  /* Shiro 白 — warna utama (dasar) */
+  --nx-shiro: #ffffff;
+
+  /* Aka 赤 — warna sekunder. Dibangun di OKLCH dari merah logo; aka-900 = merah logo NomaX */
+  --nx-aka-50: #fff2f2;
+  --nx-aka-100: #ffe2e2;
+  --nx-aka-200: #ffcac9;
+  --nx-aka-300: #ffa4a1;
+  --nx-aka-400: #fc6966;  /* teks merah di atas hitam (6.93:1 vs sumi-950) */
+  --nx-aka-500: #f33336;
+  --nx-aka-600: #da0719;
+  --nx-aka-700: #b9050e;  /* warna aksi utama — 6.79:1 vs putih */
+  --nx-aka-800: #980806;  /* hover aksi */
+  --nx-aka-900: #780000;  /* merah logo — 11.68:1 vs putih */
+  --nx-aka-950: #470503;
+
+  /* Sumi 墨 — warna ketiga. sumi-500 = abu logo; kuro = hitam logo */
+  --nx-sumi-50: #fafafa;
+  --nx-sumi-100: #f3f3f3;
+  --nx-sumi-200: #e6e6e6;
+  --nx-sumi-300: #d1d1d1;
+  --nx-sumi-400: #8a8a8a;  /* border input — 3.45:1 vs putih */
+  --nx-sumi-500: #707070;  /* abu logo — 4.95:1 vs putih */
+  --nx-sumi-600: #545454;
+  --nx-sumi-700: #3d3d3d;
+  --nx-sumi-800: #262626;
+  --nx-sumi-900: #171717;  /* teks utama — 17.93:1 vs putih */
+  --nx-sumi-950: #0a0a0a;
+  --nx-kuro: #000000;
+
+  /* Status — warna tradisional Jepang (wa-iro). Hanya untuk status, bukan dekorasi. */
+  --nx-tokiwa-50: #ecf8f1;    /* 常磐 tokiwa — hijau abadi */
+  --nx-tokiwa-100: #d3efdf;
+  --nx-tokiwa-600: #00894a;   /* hanya ikon/teks besar (4.49:1) */
+  --nx-tokiwa-700: #007b43;   /* 5.37:1 vs putih */
+  --nx-yamabuki-50: #fff8e6;  /* 山吹 yamabuki — kuning kerria */
+  --nx-yamabuki-100: #fdecc2;
+  --nx-yamabuki-400: #f8b500; /* aksen/isi; teks di atasnya wajib sumi-950 */
+  --nx-yamabuki-700: #8f5500; /* 6.06:1 vs putih */
+
+  /* ── Token semantik (dipakai komponen) ─────────────────────────────────── */
+  --nx-bg: var(--nx-shiro);
+  --nx-bg-subtle: var(--nx-sumi-50);
+  --nx-bg-muted: var(--nx-sumi-100);
+  --nx-surface: var(--nx-shiro);
+  --nx-surface-inverse: var(--nx-sumi-950);
+
+  --nx-ink: var(--nx-sumi-900);
+  --nx-ink-muted: var(--nx-sumi-600);
+  --nx-ink-subtle: var(--nx-sumi-500);   /* hanya di atas putih / sumi-50 */
+  --nx-ink-inverse: var(--nx-shiro);
+
+  --nx-line: var(--nx-sumi-200);
+  --nx-line-strong: var(--nx-sumi-400);
+
+  --nx-brand: var(--nx-aka-900);
+  --nx-action: var(--nx-aka-700);
+  --nx-action-hover: var(--nx-aka-800);
+  --nx-action-active: var(--nx-aka-900);
+  --nx-action-subtle: var(--nx-aka-50);
+  --nx-on-action: var(--nx-shiro);
+
+  --nx-ring: var(--nx-sumi-900);         /* selalu dengan offset putih 2px */
+
+  --nx-success: var(--nx-tokiwa-700);
+  --nx-success-bg: var(--nx-tokiwa-50);
+  --nx-warning: var(--nx-yamabuki-700);
+  --nx-warning-bg: var(--nx-yamabuki-50);
+  --nx-danger: var(--nx-aka-700);
+  --nx-danger-bg: var(--nx-aka-50);
+  --nx-info: var(--nx-sumi-700);
+  --nx-info-bg: var(--nx-sumi-100);
+
+  /* ── Tipografi ─────────────────────────────────────────────────────────── */
+  --nx-font-sans: "Plus Jakarta Sans", "Noto Sans JP", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --nx-font-ja: "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", Meiryo, sans-serif;
+  --nx-font-learn: "Klee One", "Noto Sans JP", serif;  /* kartu belajar kana/kanji */
+  --nx-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --nx-text-caption: 0.75rem;   /* 12px */
+  --nx-text-body-sm: 0.875rem;  /* 14px */
+  --nx-text-body: 1rem;         /* 16px */
+  --nx-text-body-lg: 1.125rem;  /* 18px — bacaan materi */
+  --nx-text-h3: 1.25rem;        /* 20px */
+  --nx-text-h2: 1.5rem;         /* 24px */
+  --nx-text-h1: 1.875rem;       /* 30px */
+  --nx-text-display: 2.25rem;   /* 36px */
+  --nx-text-learn-lg: 4rem;     /* 64px */
+  --nx-text-learn-xl: 6rem;     /* 96px */
+
+  --nx-leading-tight: 1.25;
+  --nx-leading-normal: 1.6;
+  --nx-leading-reading: 1.7;
+  --nx-leading-ruby: 2;         /* baris yang memuat furigana */
+
+  --nx-weight-regular: 400;
+  --nx-weight-medium: 500;
+  --nx-weight-semibold: 600;
+  --nx-weight-bold: 700;
+  --nx-weight-extrabold: 800;
+
+  /* ── Bentuk & elevasi ──────────────────────────────────────────────────── */
+  --nx-radius-sm: 4px;    /* badge, chip */
+  --nx-radius-md: 6px;    /* tombol, input */
+  --nx-radius-lg: 10px;   /* kartu */
+  --nx-radius-xl: 14px;   /* dialog, sheet */
+  --nx-radius-full: 9999px;
+
+  --nx-shadow-sm: 0 1px 2px rgb(10 10 10 / 0.06), 0 1px 1px rgb(10 10 10 / 0.04);
+  --nx-shadow-md: 0 4px 12px rgb(10 10 10 / 0.08), 0 2px 4px rgb(10 10 10 / 0.04);
+  --nx-shadow-lg: 0 12px 32px rgb(10 10 10 / 0.12), 0 4px 8px rgb(10 10 10 / 0.06);
+
+  /* ── Motion ────────────────────────────────────────────────────────────── */
+  --nx-duration-fast: 120ms;
+  --nx-duration-base: 200ms;
+  --nx-duration-slow: 320ms;
+  --nx-ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --nx-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ── Layout ────────────────────────────────────────────────────────────── */
+  --nx-brandbar-h: 3px;         /* garis merek merah di tepi atas aplikasi */
+  --nx-topbar-h: 56px;
+  --nx-sidebar-w: 264px;
+  --nx-sidebar-w-collapsed: 72px;
+  --nx-bottomnav-h: 64px;
+  --nx-content-max: 1200px;
+  --nx-reading-max: 72ch;
+  --nx-touch-min: 44px;
+
+  /* ── Z-index ───────────────────────────────────────────────────────────── */
+  --nx-z-sticky: 10;
+  --nx-z-dropdown: 20;
+  --nx-z-overlay: 40;
+  --nx-z-modal: 50;
+  --nx-z-toast: 60;
+}
+
+/* Gerak dikurangi: durasi dipendekkan; komponen wajib mengganti transform/animasi gerak dengan fade. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --nx-duration-fast: 0ms;
+    --nx-duration-base: 80ms;
+    --nx-duration-slow: 120ms;
+  }
+}
