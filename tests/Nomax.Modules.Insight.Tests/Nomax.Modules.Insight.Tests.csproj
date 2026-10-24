@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Unit tests of the Insight module: business rules (BR-POIN, BR-SEASON) in Domain/ as pure code. -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Modules\Insight\Nomax.Modules.Insight\Nomax.Modules.Insight.csproj" />
+  </ItemGroup>
+</Project>

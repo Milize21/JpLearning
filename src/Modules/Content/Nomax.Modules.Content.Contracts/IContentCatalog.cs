@@ -10,7 +10,7 @@ public sealed record BookInfo(Guid Id, Guid LevelId, TextBlock Title, int SortOr
 public sealed record ChapterInfo(Guid Id, Guid BookId, Guid LevelId, int Number, TextBlock Title, int SortOrder);
 
 /// <summary>
-/// Level/book/chapter lookups for Classroom and Practice (docs/02 §6.2): validating references and finding the level of a
+/// Level/book/chapter lookups for Classroom, Practice and Insight (docs/02 §6.2): validating references and finding the level of a
 /// chapter or the chapter order of a book.
 /// </summary>
 public interface IContentCatalog
@@ -26,6 +26,9 @@ public interface IContentCatalog
 
     /// <summary>Chapters of a book in display order (sort_order, then number).</summary>
     Task<IReadOnlyList<ChapterInfo>> GetBookChaptersAsync(Guid bookId, CancellationToken cancellationToken);
+
+    /// <summary>All levels in display order (sort_order).</summary>
+    Task<IReadOnlyList<LevelInfo>> GetLevelsAsync(CancellationToken cancellationToken);
 }
 
 /// <summary>What another module may still refer to (BR-KONTEN-03 deletion check, BR-FILE-05 orphan files).</summary>

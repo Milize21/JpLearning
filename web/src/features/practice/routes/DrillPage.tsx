@@ -19,6 +19,7 @@ import {
   type SafeQuestion,
 } from "../api/practice";
 import { AnswerControls, type DrillAnswer } from "../components/AnswerControls";
+import { PointsAwardedBurst } from "@/features/insight/components/PointsAwardedBurst";
 import { AnswerFeedback } from "../components/AnswerFeedback";
 import { DrillSummaryView } from "../components/DrillSummaryView";
 import { QuestionPrompt, QuestionText } from "../components/QuestionText";
@@ -220,9 +221,12 @@ export function DrillPage() {
         <span className="text-body-sm font-semibold text-ink" aria-live="polite">
           {t(drill.answered, { n: answered })}
         </span>
-        <span className="flex items-center gap-1 text-body-sm font-semibold text-ink">
-          <Flame className="size-4 text-action" aria-hidden="true" />
-          {t(drill.streak, { n: streak })}
+        <span className="flex items-center gap-3">
+          <PointsAwardedBurst />
+          <span className="flex items-center gap-1 text-body-sm font-semibold text-ink">
+            <Flame className="size-4 text-action" aria-hidden="true" />
+            {t(drill.streak, { n: streak })}
+          </span>
         </span>
       </header>
 

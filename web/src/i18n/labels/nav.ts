@@ -17,6 +17,8 @@ export const nav = {
   quizzes: tb("Kuis & ujian", "Quizzes & exams", "{小|しょう}テスト"), // ja-review
   assignments: tb("Tugas", "Assignments", "{課題|かだい}"), // ja-review
   grades: tb("Nilai", "Grades", "{成績|せいせき}"), // ja-review
+  leaderboard: tb("Peringkat", "Leaderboard", "ランキング"), // ja-review
+  seasons: tb("Season", "Seasons", "シーズン"), // ja-review
   login: tb("Masuk", "Log in", "ログイン"), // ja-review
   logout: tb("Keluar", "Log out", "ログアウト"), // ja-review
   mainNavigation: tb("Navigasi utama", "Main navigation", "メイン メニュー"), // ja-review

@@ -267,6 +267,9 @@ Basis: shadcn/ui (Radix) yang diberi token NomaX. Komponen domain dibuat di `web
 | **TimerBadge** | normal · < 5 menit · < 1 menit | Netral → `warning` → `danger` + ikon; diumumkan pembaca layar tiap menit |
 | **HankoStamp** | 4 jenis (§8) | Animasi `slow`; `aria-label` berisi arti |
 | **LeaderboardRow / Podium** | baris saya | Baris saya: latar `aka-50` + border kiri `aka-700`, menempel (sticky) saat digulir. Podium 3 besar: kartu `sumi-950` dengan angka `aka-400` |
+| **LiveIndicator** ➕ | tersambung · terputus | Pil kecil di papan peringkat: tersambung = border & teks `aka-700` + ikon siaran (berdenyut hanya bila gerak tidak dikurangi), teks "Live"; terputus = border `line`, teks `ink-muted`, ikon wifi-off, "Tidak tersambung". Selalu ikon + teks |
+| **PointsAwardedBurst** ➕ | – | "+n poin" di header drilling saat `PointsAwarded` tiba: teks `aka-700` tebal, naik dan memudar 1,6 detik (`motion-safe`), diumumkan `aria-live="polite"`. Poin 0 tidak ditampilkan |
+| **MyRankCard** ➕ | ada peringkat · belum ada poin | Kartu tautan di beranda murid ke halaman Peringkat: ikon piala `action`, nama season, "Peringkat n · x poin" atau ajakan mulai latihan |
 | **ScheduleItem** | akan datang · berlangsung · selesai · batal | Tanggal, jam (zona pengguna), kelas, topik, ikon platform; tombol "Gabung" aktif 15 menit sebelum mulai |
 | **UploadDropzone** | idle · uploading · paused · done · error | Seret atau pilih file; progres per file; lanjut/batal; ukuran maksimal tertulis |
 | **GradeBadge** | 0–4 | Angka besar + persen, warna **netral hitam** (nilai bukan "salah") |

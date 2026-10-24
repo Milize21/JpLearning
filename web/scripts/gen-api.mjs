@@ -5,7 +5,7 @@ import openapiTS, { astToString } from "openapi-typescript";
 
 const apiUrl = process.env.NOMAX_API_URL ?? "http://localhost:5080";
 // Add a module here when it publishes its OpenAPI document.
-const modules = ["identity", "content", "classroom", "practice"];
+const modules = ["identity", "content", "classroom", "practice", "insight"];
 
 await mkdir(new URL("../src/lib/api/schema/", import.meta.url), { recursive: true });
 

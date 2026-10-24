@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Insight module (docs/02 §3): activity log, points, seasons and the live leaderboard (Redis + SignalR). -->
+  <PropertyGroup>
+    <RootNamespace>Nomax.Modules.Insight</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.StackExchangeRedis" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\Nomax.BuildingBlocks\Nomax.BuildingBlocks.csproj" />
+    <ProjectReference Include="..\Nomax.Modules.Insight.Contracts\Nomax.Modules.Insight.Contracts.csproj" />
+    <ProjectReference Include="..\..\Classroom\Nomax.Modules.Classroom.Contracts\Nomax.Modules.Classroom.Contracts.csproj" />
+    <ProjectReference Include="..\..\Content\Nomax.Modules.Content.Contracts\Nomax.Modules.Content.Contracts.csproj" />
+    <ProjectReference Include="..\..\Identity\Nomax.Modules.Identity.Contracts\Nomax.Modules.Identity.Contracts.csproj" />
+    <ProjectReference Include="..\..\Practice\Nomax.Modules.Practice.Contracts\Nomax.Modules.Practice.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Nomax.Modules.Insight.Tests" />
+    <InternalsVisibleTo Include="Nomax.IntegrationTests" />
+  </ItemGroup>
+</Project>

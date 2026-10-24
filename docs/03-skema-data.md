@@ -745,8 +745,9 @@ Index: unique `(level_id) where status = 'active'` (satu season aktif per level)
 | `points` | numeric(8,2) | tidak | CHECK `>= 0` (0 tetap dicatat untuk audit anti-farming) |
 | `ts` | timestamptz | tidak | waktu kejadian |
 | `rule` ➕ | varchar(50) | tidak | aturan yang diterapkan: `drill_base`, `drill_repeat_half`, `drill_daily_cap`, `self_check_zero`, `quiz_score`, `quiz_improvement` |
+| `item_key` ➕ | varchar(80) | tidak | yang dihitung ulang oleh aturan poin: `{item_type}:{item_id}` untuk drilling (BR-POIN-03), `quiz:{quiz_id}` untuk kuis/ujian (BR-POIN-08). Insight tidak boleh membaca tabel Practice, jadi kunci ini disalin dari event |
 
-Index: unique `(source_type, source_id)` (idempotensi); `(season_id, student_id)`; `(student_id, ts)`.
+Index: unique `(source_type, source_id)` (idempotensi); `(season_id, student_id)`; `(student_id, ts)`; `(student_id, item_key)`.
 
 ### 9.4 `insight.season_standings` ➕
 
@@ -826,7 +827,7 @@ Seed harus **idempoten** (aman dijalankan berulang).
 | Kelas | "Kelas Demo Dasar": sensei sebagai pengajar utama, 2 murid, Bab 1 terbuka |
 | Sumber soal | "Internal NomaX" (license `internal`); di luar dev sumber ini dibuat otomatis saat soal staf pertama disimpan |
 | Soal ➕ | Soal kana hasil generator (BR-SOAL-05: kana → romaji, romaji → kana, kana → ketik romaji) untuk kana seed, langsung `published` agar drilling bisa dicoba; sumber = sumber data kana |
-| Season | satu season aktif per level (Fase 4) |
+| Season | satu season aktif per level, "{nama level} · Musim 1" (Fase 4); level baru mendapat season saat pertama dibutuhkan (D-42) |
 | Skema nilai | default untuk kelas demo (Fase 3) |
 
 ## 14. Retensi & penghapusan data 🟡 (Q-12)

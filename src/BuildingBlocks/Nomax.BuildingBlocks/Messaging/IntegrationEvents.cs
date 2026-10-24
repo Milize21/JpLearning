@@ -52,10 +52,17 @@ public abstract class InboxConsumer<TContext, TEvent>(TContext db, TimeProvider 
         db.InboxMessages.Add(new InboxMessage(envelope.EventId, handler, timeProvider.GetUtcNow()));
         await db.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+        await AfterCommitAsync(envelope, cancellationToken);
     }
 
     /// <summary>The effects of the event. Change entities of <see cref="Db"/>; the base class saves and commits.</summary>
     protected abstract Task ApplyAsync(IntegrationEventEnvelope<TEvent> envelope, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Side effects outside the database (cache, real-time push) once the event is committed; skipped for duplicates.
+    /// They are best effort: the database stays the source of truth.
+    /// </summary>
+    protected virtual Task AfterCommitAsync(IntegrationEventEnvelope<TEvent> envelope, CancellationToken cancellationToken) => Task.CompletedTask;
 }
 
 public static class OutboxExtensions

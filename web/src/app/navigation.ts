@@ -6,6 +6,8 @@ import {
   GraduationCap,
   NotebookPen,
   Target,
+  Trophy,
+  Medal,
   CalendarDays,
   Database,
   House,
@@ -44,13 +46,16 @@ export const navigation: Readonly<Record<UserRole, readonly NavItem[]>> = {
     { to: "/murid/tugas", label: nav.assignments, icon: NotebookPen, sidebarOnly: true },
     { to: "/murid/nilai", label: nav.grades, icon: GraduationCap, sidebarOnly: true },
     { to: "/murid/jadwal", label: nav.schedule, icon: CalendarDays },
-    { to: "/murid/profil", label: nav.profile, icon: UserRound },
+    { to: "/murid/peringkat", label: nav.leaderboard, icon: Trophy },
+    // Reached from the profile menu on phones (docs/07 §12: the bottom nav ends with Peringkat).
+    { to: "/murid/profil", label: nav.profile, icon: UserRound, sidebarOnly: true },
   ],
   sensei: [
     { to: "/sensei", label: nav.home, icon: House, end: true },
     { to: "/sensei/kelas", label: nav.classes, icon: School },
     { to: "/sensei/bank-soal", label: nav.questionBank, icon: FileQuestion },
     { to: "/sensei/jadwal", label: nav.schedule, icon: CalendarDays },
+    { to: "/sensei/peringkat", label: nav.leaderboard, icon: Trophy },
     { to: "/sensei/profil", label: nav.profile, icon: UserRound },
   ],
   admin: [
@@ -61,6 +66,8 @@ export const navigation: Readonly<Record<UserRole, readonly NavItem[]>> = {
     { to: "/admin/bank-soal", label: nav.questionBank, icon: FileQuestion },
     { to: "/admin/sumber-soal", label: nav.questionSources, icon: BookMarked },
     { to: "/admin/kelas", label: nav.classes, icon: School },
+    { to: "/admin/season", label: nav.seasons, icon: Medal },
+    { to: "/admin/peringkat", label: nav.leaderboard, icon: Trophy },
     { to: "/admin/profil", label: nav.profile, icon: UserRound },
   ],
 };

@@ -23,6 +23,8 @@ dotnet user-secrets set "Keycloak:AdminClientSecret" "<NOMAX_API_CLIENT_SECRET>"
 node scripts/vapid-keys.mjs
 dotnet user-secrets set "WebPush:PublicKey" "<publicKey>" --project src/Nomax.Api
 dotnet user-secrets set "WebPush:PrivateKey" "<privateKey>" --project src/Nomax.Api
+# Opsional di dev, WAJIB di luar dev (D-40): kunci HMAC entryKey leaderboard. Tanpa kunci, dev memakai kunci acak per proses.
+dotnet user-secrets set "Leaderboard:EntryKeySecret" "<string acak panjang>" --project src/Nomax.Api
 
 # 4. Jalankan API dan Gateway (dua terminal).
 dotnet run --project src/Nomax.Api
@@ -46,7 +48,6 @@ node scripts/dev-live.mjs restart api     # api | gateway | web
 node scripts/dev-live.mjs stop            # hentikan aplikasi (Docker tetap jalan)
 node scripts/dev-live.mjs run             # di terminal ini (Ctrl+C berhenti)
 ```
-
 
 Log: `.live/logs/` (`supervisor.log`, `api.log`, `gateway.log`, `web.log`, `build.log`). Folder `.live/` tidak di-commit.
 

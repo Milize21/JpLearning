@@ -5,6 +5,7 @@ import { Label } from "@/components/japanese/Label";
 import { Button } from "@/components/ui/button";
 import { Card, Skeleton } from "@/components/ui/misc";
 import { MyClassesCard, NextSessionCard } from "@/features/classroom/components/HomeWidgets";
+import { MyRankCard } from "@/features/insight/components/MyRankCard";
 import { useActiveAccountCount } from "@/features/identity/api/identity";
 import { home } from "@/i18n/labels/identity";
 import { useT } from "@/i18n/prefs";
@@ -22,7 +23,7 @@ function Greeting() {
   );
 }
 
-/** /murid — the student's dashboard; classes, schedule and practice arrive with Phases 1–4. */
+/** /murid — the student's dashboard (docs/07 §11 flow 2); practice and leaderboard arrive with Phases 2–4. */
 export function MuridHomePage() {
   return (
     <div className="flex flex-col gap-6">
@@ -30,6 +31,7 @@ export function MuridHomePage() {
       <div className="grid gap-6 lg:grid-cols-2">
         <NextSessionCard />
         <MyClassesCard />
+        <MyRankCard />
       </div>
     </div>
   );

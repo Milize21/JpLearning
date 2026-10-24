@@ -48,6 +48,9 @@ public sealed class NomaxApiFixture : IAsyncLifetime
 
     public HttpClient CreateClient() => Factory.CreateClient();
 
+    /// <summary>The in-memory server, for clients that bring their own transport (SignalR).</summary>
+    internal TestServer Server => Factory.Server;
+
     public async ValueTask DisposeAsync()
     {
         if (_factory is not null)

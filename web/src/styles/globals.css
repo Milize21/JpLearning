@@ -27,3 +27,18 @@
     }
   }
 }
+
+/* "+1" of the drilling screen (PointsAwardedBurst): rises a little and fades out. */
+@keyframes nx-rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  20% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-1rem);
+  }
+}

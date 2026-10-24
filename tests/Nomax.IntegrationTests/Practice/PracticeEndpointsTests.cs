@@ -240,7 +240,7 @@ public sealed class PracticeEndpointsTests(NomaxApiFixture api)
     }
 
     [Fact]
-    public async Task BR_AKSES_05_staff_preview_evaluates_without_storing_anything()
+    public async Task BR_AKSES_05_and_BR_POIN_case_10_staff_preview_evaluates_without_storing_anything()
     {
         using var client = api.CreateClient();
         var world = await NewWorldAsync(client);
@@ -257,6 +257,8 @@ public sealed class PracticeEndpointsTests(NomaxApiFixture api)
         (await CountAsync("select count(*) from practice.drill_answers")).ShouldBeLessThanOrEqualTo(before + 100); // other tests run in parallel
         (await CountAsync($"select count(*) from practice.drill_answers where question_id = '{id}'")).ShouldBe(0);
         (await client.JsonAsync("GET", $"/api/practice/questions/{id}", Sensei)).GetProperty("hasAnswers").GetBoolean().ShouldBeFalse();
+        // BR-POIN case 10: a preview answer is never an AnswerSubmitted, so the sensei earns no points.
+        (await CountAsync($"select count(*) from insight.point_events where student_id = '{TestUsers.Sensei}'")).ShouldBe(0);
     }
 
     private sealed record World(Guid LevelId, Guid BookId, IReadOnlyList<Guid> Chapters);

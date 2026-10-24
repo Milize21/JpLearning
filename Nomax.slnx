@@ -24,6 +24,10 @@
     <Project Path="src/Modules/Practice/Nomax.Modules.Practice.Contracts/Nomax.Modules.Practice.Contracts.csproj" />
     <Project Path="src/Modules/Practice/Nomax.Modules.Practice/Nomax.Modules.Practice.csproj" />
   </Folder>
+  <Folder Name="/src/Modules/Insight/">
+    <Project Path="src/Modules/Insight/Nomax.Modules.Insight.Contracts/Nomax.Modules.Insight.Contracts.csproj" />
+    <Project Path="src/Modules/Insight/Nomax.Modules.Insight/Nomax.Modules.Insight.csproj" />
+  </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Nomax.ArchitectureTests/Nomax.ArchitectureTests.csproj" />
     <Project Path="tests/Nomax.BuildingBlocks.Tests/Nomax.BuildingBlocks.Tests.csproj" />
@@ -32,5 +36,6 @@
     <Project Path="tests/Nomax.Modules.Content.Tests/Nomax.Modules.Content.Tests.csproj" />
     <Project Path="tests/Nomax.Modules.Classroom.Tests/Nomax.Modules.Classroom.Tests.csproj" />
     <Project Path="tests/Nomax.Modules.Practice.Tests/Nomax.Modules.Practice.Tests.csproj" />
+    <Project Path="tests/Nomax.Modules.Insight.Tests/Nomax.Modules.Insight.Tests.csproj" />
   </Folder>
 </Solution>

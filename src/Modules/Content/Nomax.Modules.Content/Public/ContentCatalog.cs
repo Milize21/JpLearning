@@ -41,6 +41,12 @@ internal sealed class ContentCatalog(ContentDbContext db) : IContentCatalog
                 .ThenBy(chapter => chapter.Number),
         ];
 
+    public async Task<IReadOnlyList<LevelInfo>> GetLevelsAsync(CancellationToken cancellationToken) =>
+        await db.Levels.AsNoTracking()
+            .OrderBy(level => level.SortOrder)
+            .Select(level => new LevelInfo(level.Id, level.Code, level.Name, level.SortOrder))
+            .ToListAsync(cancellationToken);
+
     // Filter on the entities first: EF cannot translate a filter on the projected record.
     private IQueryable<ChapterInfo> ChapterInfos(IQueryable<Domain.Chapter> chapters) =>
         chapters.AsNoTracking().Join(

@@ -25,9 +25,12 @@ const quizListPage = () => import("@/features/practice/routes/QuizListPage");
 const quizAttemptPage = () => import("@/features/practice/routes/QuizAttemptPage");
 const assignmentsPage = () => import("@/features/practice/routes/AssignmentsPage");
 const myGradesPage = () => import("@/features/practice/routes/MyGradesPage");
+const leaderboardPage = () => import("@/features/insight/routes/LeaderboardPage");
+const adminSeasonPage = () => import("@/features/insight/routes/AdminSeasonPage");
 
 const staffPracticeRoutes = [
   { path: "bank-soal", lazy: async () => ({ Component: (await questionBankPage()).QuestionBankPage }) },
+  { path: "peringkat", lazy: async () => ({ Component: (await leaderboardPage()).LeaderboardPage }) },
   {
     path: "murid/:studentId",
     lazy: async () => ({ Component: (await studentProgressPage()).StudentProgressPage }),
@@ -71,6 +74,7 @@ export const router = createBrowserRouter([
       { path: "materi", lazy: async () => ({ Component: (await materialsHubPage()).MaterialsHubPage }) },
       { path: "bab/:chapterId", lazy: async () => ({ Component: (await chapterPage()).ChapterPage }) },
       { path: "jadwal", lazy: async () => ({ Component: (await schedulePage()).SchedulePage }) },
+      { path: "peringkat", lazy: async () => ({ Component: (await leaderboardPage()).LeaderboardPage }) },
       { path: "profil", lazy: async () => ({ Component: (await profilePage()).ProfilePage }) },
     ],
   },
@@ -106,6 +110,7 @@ export const router = createBrowserRouter([
         lazy: async () => ({ Component: (await classDetailPage()).ClassDetailPage }),
       },
       ...staffPracticeRoutes,
+      { path: "season", lazy: async () => ({ Component: (await adminSeasonPage()).AdminSeasonPage }) },
       { path: "sumber-soal", lazy: async () => ({ Component: (await sourcesPage()).SourcesPage }) },
       { path: "profil", lazy: async () => ({ Component: (await profilePage()).ProfilePage }) },
     ],

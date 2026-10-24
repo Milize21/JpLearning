@@ -4,6 +4,7 @@ import { toApiError } from "./errors";
 import type { paths as ClassroomPaths } from "./schema/classroom";
 import type { paths as ContentPaths } from "./schema/content";
 import type { paths as IdentityPaths } from "./schema/identity";
+import type { paths as InsightPaths } from "./schema/insight";
 import type { paths as PracticePaths } from "./schema/practice";
 
 /**
@@ -60,3 +61,5 @@ classroomApi.use(auth);
 export const practiceApi = createClient<PracticePaths>({ baseUrl: window.location.origin });
 practiceApi.use(auth);
 
+export const insightApi = createClient<InsightPaths>({ baseUrl: window.location.origin });
+insightApi.use(auth);

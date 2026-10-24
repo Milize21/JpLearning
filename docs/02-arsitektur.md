@@ -140,7 +140,7 @@ Dilarang: mereferensikan proyek internal modul lain, memakai DbContext modul lai
 | Contracts | Interface | Dipakai oleh | Fungsi utama |
 |---|---|---|---|
 | Identity | `IUserDirectory` | Classroom, Practice, Insight | Profil ringkas berdasarkan daftar id atau daftar username persis: nama tampilan, peran, aktif, zona waktu, locale, email (khusus notifikasi) |
-| Content | `IContentCatalog` | Classroom, Practice | Validasi dan info Level/Buku/Bab; level dari sebuah bab; urutan bab dalam buku |
+| Content | `IContentCatalog` | Classroom, Practice, Insight | Validasi dan info Level/Buku/Bab; level dari sebuah bab; urutan bab dalam buku; daftar semua level (Insight: season per level) |
 | Content | `IContentUsageProbe` (diimplementasikan modul lain) | Content | Content bertanya ke setiap modul yang menyimpan referensi konten sebelum menghapus level/buku/bab/data referensi (BR-KONTEN-03) dan sebelum menganggap file yatim (BR-FILE-05). Classroom mengimplementasikannya sejak Fase 1, Practice sejak Fase 2 |
 | Content | `IReferenceDataReader` | Practice (generator) | Daftar kana/kanji/kosakata/tata bahasa/kalimat per level dan bab |
 | Content | `IStoredFileService` | Practice (tugas) | Validasi file (status, pengunggah, purpose) dan pembuatan URL unduhan bertanda tangan |
@@ -162,6 +162,7 @@ Task<BookInfo?> IContentCatalog.GetBookAsync(Guid bookId, CancellationToken ct);
 Task<ChapterInfo?> IContentCatalog.GetChapterAsync(Guid chapterId, CancellationToken ct);
 Task<IReadOnlyDictionary<Guid, ChapterInfo>> IContentCatalog.GetChaptersAsync(IReadOnlyCollection<Guid> chapterIds, CancellationToken ct);
 Task<IReadOnlyList<ChapterInfo>> IContentCatalog.GetBookChaptersAsync(Guid bookId, CancellationToken ct);
+Task<IReadOnlyList<LevelInfo>> IContentCatalog.GetLevelsAsync(CancellationToken ct); // ➕ Fase 4: semua level urut sort_order
 Task<bool> IContentUsageProbe.IsUsedAsync(ContentUsageTarget target, Guid id, CancellationToken ct); // Level, Book, Chapter, ReferenceItem, File
 Task<IReadOnlySet<Guid>> IContentUsageProbe.GetUsedFileIdsAsync(IReadOnlyCollection<Guid> fileIds, CancellationToken ct);
 Task<IReadOnlyDictionary<Guid, StoredFileInfo>> IStoredFileService.GetFilesAsync(IReadOnlyCollection<Guid> fileIds, CancellationToken ct);
@@ -195,6 +196,7 @@ Nama di kode: entitas kelas bernama `StudyClass` karena `Class` ditolak analyzer
 1. Producer menyimpan perubahan dan baris `outbox_messages` dalam **satu transaksi** DbContext modulnya.
 2. `OutboxProcessor` (BackgroundService per modul, interval 1 detik) mengambil pesan dengan `FOR UPDATE SKIP LOCKED`, lalu memanggil semua `IIntegrationEventConsumer<T>` yang terdaftar (in-process, `AddIntegrationEventConsumer<TEvent, TConsumer>()`). Nama `…Handler` ditolak analyzer CA1711.
 3. Consumer mencatat `inbox_messages(message_id, handler)` di schema-nya sendiri dalam transaksi yang sama dengan efek handler, sehingga handler **idempoten** (kelas dasar `InboxConsumer<TContext, TEvent>`).
+   ➕ Efek di luar database modul (skor Redis, pesan hub SignalR) ditulis di `AfterCommitAsync`, yang dipanggil hanya setelah transaksi itu commit dan tidak dipanggil untuk pesan yang sudah pernah diproses. Consumer Insight menangkap kegagalan Redis/hub di sini dan mencatatnya sebagai warning, karena PostgreSQL sudah benar dan Redis bisa dibangun ulang (§7); pengiriman ulang pesan tidak menjalankan efek ini lagi.
 4. Gagal: `attempts` bertambah, backoff eksponensial; setelah 10 kali ditandai gagal dan dicatat sebagai error.
 5. Pesan tanpa handler langsung ditandai terproses.
 6. Daftar event dan payload: [05](05-api-dan-event.md) §8. Event baru wajib didokumentasikan di sana sebelum dipakai.

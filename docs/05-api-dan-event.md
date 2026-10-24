@@ -213,6 +213,7 @@ Rincian kontrak Identity (diimplementasikan Fase 0.2; skema lengkap di `/openapi
 | GET | `/students/{id}/activity?cursor=` | SenseiDari, admin | | 4 |
 | GET | `/classes/{id}/activity-summary` | pengajar, admin | Terakhir aktif per murid | 4 |
 
+Catatan Insight ➕: `/leaderboards` mengembalikan `{ levels, board }`; `board = { season, top, me, updatedAt }`, `me` hanya untuk murid yang sudah punya poin. Baris papan = `{ rank, entryKey, displayName, points }` (tanpa id pengguna). `/seasons/{id}/standings` mengembalikan `{ season, items, page, pageSize, totalCount, me }`; untuk season aktif berisi peringkat sementara (D-42). `/me/activity` dan `/students/{id}/activity` memakai kursor buram `nextCursor` (30 per halaman). `POST /seasons/{id}/close` mengembalikan season baru; season yang sudah ditutup → 409 `invalid_state`.
 
 ## 8. Integration event
 

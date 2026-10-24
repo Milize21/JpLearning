@@ -9,6 +9,7 @@ import { common } from "./common";
 import * as content from "./content";
 import { errors } from "./errors";
 import * as identity from "./identity";
+import * as insight from "./insight";
 import * as navModule from "./nav";
 import * as practice from "./practice";
 
@@ -21,6 +22,7 @@ const labelModules: Record<string, unknown> = {
   ...classroom,
   ...practice,
   ...assessment,
+  ...insight,
 };
 
 function collectLabels(): Array<[string, UiLabel]> {
