@@ -1,4 +1,3 @@
-import { z } from "zod";
 import { JapaneseText } from "@/components/japanese/JapaneseText";
 import { Field, FieldError, FieldHint, FieldLabel, Input } from "@/components/ui/form";
 import { common } from "@/i18n/labels/common";
@@ -10,16 +9,6 @@ import type { TextBlockFields } from "@/i18n/textblock";
 import type { UiLabel } from "@/i18n/tb";
 
 /** docs/03 §3.1 limits: Indonesian required for titles; Japanese must be valid furigana markup. */
-export const textBlockSchema = z.object({
-  id: z.string().trim().min(1, "required").max(2000, "tooLong"),
-  en: z.string().trim().max(2000, "tooLong"),
-  ja: z
-    .string()
-    .trim()
-    .refine((value) => value === "" || parseFurigana(value).errors.length === 0, "invalidMarkup"),
-});
-
-export const emptyTextBlock: TextBlockFields = { id: "", en: "", ja: "" };
 
 const messageLabels: Record<string, UiLabel> = {
   required: fieldErrors.required,
@@ -47,7 +36,8 @@ export function TextBlockInput({
   const parsed = value.ja.trim() === "" ? null : parseFurigana(value.ja.trim());
   const firstError = parsed?.errors[0];
   const firstWarning = parsed?.warnings[0];
-  const message = (key: string | undefined) => (key ? t(messageLabels[key] ?? fieldErrors.invalid, { max: 2000 }) : null);
+  const message = (key: string | undefined) =>
+    key ? t(messageLabels[key] ?? fieldErrors.invalid, { max: 2000 }) : null;
 
   return (
     <fieldset className="flex flex-col gap-3 rounded-lg border border-line p-4">
@@ -97,10 +87,14 @@ export function TextBlockInput({
         <FieldHint id={`${id}-ja-hint`}>{t(textFields.japaneseHint)}</FieldHint>
         {firstError && (
           <FieldError id={`${id}-ja-error`}>
-            {t(textFields.markupError, { issue: firstError.text ? `${firstError.code} (${firstError.text})` : firstError.code })}
+            {t(textFields.markupError, {
+              issue: firstError.text ? `${firstError.code} (${firstError.text})` : firstError.code,
+            })}
           </FieldError>
         )}
-        {!firstError && firstWarning && <FieldHint>{t(textFields.particleWarning, { text: firstWarning.text ?? "" })}</FieldHint>}
+        {!firstError && firstWarning && (
+          <FieldHint>{t(textFields.particleWarning, { text: firstWarning.text ?? "" })}</FieldHint>
+        )}
         {parsed && !firstError && (
           <p className="rounded-md bg-canvas-subtle px-3 py-2 text-body">
             <span className="mr-2 text-caption font-semibold text-ink-muted">{t(textFields.preview)}</span>

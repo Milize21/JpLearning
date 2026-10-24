@@ -12,7 +12,7 @@ import type { SessionDto } from "../api/classroom";
 const joinOpensMs = 15 * 60_000;
 
 /** Google Calendar "add event" template link (docs/05 §12), times in UTC. */
-export function googleCalendarUrl(session: SessionDto, details: string): string {
+function googleCalendarUrl(session: SessionDto, details: string): string {
   const stamp = (iso: string) => iso.replace(/[-:]/gu, "").replace(/\.\d{3}/u, "");
   const params = new URLSearchParams({
     action: "TEMPLATE",
@@ -23,9 +23,9 @@ export function googleCalendarUrl(session: SessionDto, details: string): string 
   return `https://calendar.google.com/calendar/render?${params.toString()}`;
 }
 
-export type SessionPhase = "upcoming" | "ongoing" | "finished" | "cancelled";
+type SessionPhase = "upcoming" | "ongoing" | "finished" | "cancelled";
 
-export function sessionPhase(session: SessionDto, now: number): SessionPhase {
+function sessionPhase(session: SessionDto, now: number): SessionPhase {
   if (session.status === "cancelled") return "cancelled";
   if (now >= new Date(session.endsAt).getTime()) return "finished";
   if (now >= new Date(session.startsAt).getTime()) return "ongoing";
@@ -53,20 +53,29 @@ export function ScheduleItem({
   const phase = sessionPhase(session, now);
   const canJoin =
     session.meetingUrl !== null &&
-    (phase === "ongoing" || (phase === "upcoming" && new Date(session.startsAt).getTime() - now <= joinOpensMs));
+    (phase === "ongoing" ||
+      (phase === "upcoming" && new Date(session.startsAt).getTime() - now <= joinOpensMs));
   const platform = t(schedule[session.platform]);
-  const details = [`${t(schedule.platform)}: ${platform}`, session.meetingUrl ? `${t(schedule.link)}: ${session.meetingUrl}` : null, session.note]
+  const details = [
+    `${t(schedule.platform)}: ${platform}`,
+    session.meetingUrl ? `${t(schedule.link)}: ${session.meetingUrl}` : null,
+    session.note,
+  ]
     .filter(Boolean)
     .join("\n");
 
   return (
-    <Card className={cn("flex flex-col gap-3 p-4", phase === "cancelled" && "bg-canvas-subtle text-ink-muted")}>
+    <Card
+      className={cn("flex flex-col gap-3 p-4", phase === "cancelled" && "bg-canvas-subtle text-ink-muted")}
+    >
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div className="flex min-w-0 flex-col gap-1">
           <p className="text-body-sm font-semibold text-ink-muted">
             {formatRange(session.startsAt, session.endsAt, uiLocale, me.timezone)}
           </p>
-          <h3 className={cn("font-semibold text-ink", phase === "cancelled" && "line-through")}>{session.topic}</h3>
+          <h3 className={cn("font-semibold text-ink", phase === "cancelled" && "line-through")}>
+            {session.topic}
+          </h3>
           <p className="text-body-sm text-ink-muted">
             {session.className} · {platform}
           </p>
@@ -82,7 +91,12 @@ export function ScheduleItem({
         <div className="flex flex-wrap items-center gap-2">
           {session.meetingUrl &&
             (canJoin ? (
-              <a href={session.meetingUrl} target="_blank" rel="noopener noreferrer" className={buttonVariants({ variant: "primary", size: "sm" })}>
+              <a
+                href={session.meetingUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={buttonVariants({ variant: "primary", size: "sm" })}
+              >
                 <Video aria-hidden="true" />
                 {t(schedule.join)}
               </a>

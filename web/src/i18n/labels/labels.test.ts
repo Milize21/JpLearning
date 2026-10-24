@@ -3,14 +3,25 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { parseFurigana } from "../furigana";
 import type { UiLabel } from "../tb";
+import * as assessment from "./assessment";
 import * as classroom from "./classroom";
 import { common } from "./common";
 import * as content from "./content";
 import { errors } from "./errors";
 import * as identity from "./identity";
 import * as navModule from "./nav";
+import * as practice from "./practice";
 
-const labelModules: Record<string, unknown> = { common, errors, ...navModule, ...identity, ...content, ...classroom };
+const labelModules: Record<string, unknown> = {
+  common,
+  errors,
+  ...navModule,
+  ...identity,
+  ...content,
+  ...classroom,
+  ...practice,
+  ...assessment,
+};
 
 function collectLabels(): Array<[string, UiLabel]> {
   const found: Array<[string, UiLabel]> = [];

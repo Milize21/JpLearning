@@ -17,7 +17,13 @@ import { usePrefs, useT } from "@/i18n/prefs";
 import { textIn } from "@/i18n/textblock";
 import { errorCode } from "@/lib/api/errors";
 import { dayKey, isoToZoned, zonedToIso } from "@/lib/datetime";
-import { useCreateSession, useUpdateSession, type ClassDto, type SessionDto, type SessionPlatform } from "../api/classroom";
+import {
+  useCreateSession,
+  useUpdateSession,
+  type ClassDto,
+  type SessionDto,
+  type SessionPlatform,
+} from "../api/classroom";
 
 /**
  * Schedule or change a session (BR-JADWAL-01). Date and times are entered in the teacher's own time zone; the server
@@ -50,14 +56,27 @@ export function SessionFormDialog({
   );
 }
 
-function SessionForm({ classInfo, session, onClose }: { classInfo: ClassDto; session?: SessionDto; onClose: () => void }) {
+function SessionForm({
+  classInfo,
+  session,
+  onClose,
+}: {
+  classInfo: ClassDto;
+  session?: SessionDto;
+  onClose: () => void;
+}) {
   const t = useT();
   const { uiLocale } = usePrefs();
   const me = useCurrentUser();
   const book = useBook(classInfo.bookId);
   const create = useCreateSession(classInfo.id);
   const update = useUpdateSession();
-  const start = session ? isoToZoned(session.startsAt, me.timezone) : { date: dayKey(new Date(Date.now() + 86_400_000), me.timezone), time: "19:00" };
+  // Default: tomorrow 19:00 in the teacher's zone, computed once when the form opens.
+  const [start] = useState(() =>
+    session
+      ? isoToZoned(session.startsAt, me.timezone)
+      : { date: dayKey(new Date(Date.now() + 86_400_000), me.timezone), time: "19:00" },
+  );
   const end = session ? isoToZoned(session.endsAt, me.timezone) : { date: start.date, time: "20:30" };
   const [topic, setTopic] = useState(session?.topic ?? "");
   const [date, setDate] = useState(start.date);
@@ -73,7 +92,10 @@ function SessionForm({ classInfo, session, onClose }: { classInfo: ClassDto; ses
   const startsAt = zonedToIso(date, startTime, me.timezone);
   // A session that ends past midnight ends on the next day.
   const endsSameDay = zonedToIso(date, endTime, me.timezone);
-  const endsAt = endsSameDay > startsAt ? endsSameDay : new Date(new Date(endsSameDay).getTime() + 86_400_000).toISOString();
+  const endsAt =
+    endsSameDay > startsAt
+      ? endsSameDay
+      : new Date(new Date(endsSameDay).getTime() + 86_400_000).toISOString();
   const durationOk = new Date(endsAt).getTime() - new Date(startsAt).getTime() <= 8 * 3_600_000;
   const topicInvalid = topic.trim().length === 0 || topic.trim().length > 200;
   const urlInvalid = meetingUrl.trim() !== "" && !meetingUrl.trim().startsWith("https://");
@@ -118,7 +140,11 @@ function SessionForm({ classInfo, session, onClose }: { classInfo: ClassDto; ses
   };
 
   return (
-    <DialogContent closeLabel={t(common.close)} aria-describedby={undefined} className="max-h-[90dvh] overflow-y-auto">
+    <DialogContent
+      closeLabel={t(common.close)}
+      aria-describedby={undefined}
+      className="max-h-[90dvh] overflow-y-auto"
+    >
       <DialogHeader>
         <DialogTitle>
           <Label value={session ? schedule.edit : schedule.add} companion="inline" />
@@ -144,7 +170,9 @@ function SessionForm({ classInfo, session, onClose }: { classInfo: ClassDto; ses
               setTopic(event.target.value);
             }}
           />
-          {submitted && topicInvalid && <FieldError id="session-topic-error">{t(fieldErrors.required)}</FieldError>}
+          {submitted && topicInvalid && (
+            <FieldError id="session-topic-error">{t(fieldErrors.required)}</FieldError>
+          )}
         </Field>
         <div className="grid gap-4 sm:grid-cols-3">
           <Field>
@@ -183,7 +211,9 @@ function SessionForm({ classInfo, session, onClose }: { classInfo: ClassDto; ses
             />
           </Field>
         </div>
-        {submitted && !durationOk && <FieldError id="session-end-error">{t(schedule.endAfterStart)}</FieldError>}
+        {submitted && !durationOk && (
+          <FieldError id="session-end-error">{t(schedule.endAfterStart)}</FieldError>
+        )}
         <Field>
           <FieldLabel htmlFor="session-platform">{t(schedule.platform)}</FieldLabel>
           <Select
@@ -200,7 +230,8 @@ function SessionForm({ classInfo, session, onClose }: { classInfo: ClassDto; ses
         </Field>
         <Field>
           <FieldLabel htmlFor="session-url">
-            {t(schedule.meetingUrl)} <span className="font-normal text-ink-muted">({t(common.optional)})</span>
+            {t(schedule.meetingUrl)}{" "}
+            <span className="font-normal text-ink-muted">({t(common.optional)})</span>
           </FieldLabel>
           <Input
             id="session-url"
@@ -214,7 +245,9 @@ function SessionForm({ classInfo, session, onClose }: { classInfo: ClassDto; ses
             }}
           />
           <FieldHint id="session-url-hint">{t(schedule.meetingUrlHint)}</FieldHint>
-          {submitted && urlInvalid && <FieldError id="session-url-error">{t(fieldErrors.invalid)}</FieldError>}
+          {submitted && urlInvalid && (
+            <FieldError id="session-url-error">{t(fieldErrors.invalid)}</FieldError>
+          )}
         </Field>
         <Field>
           <FieldLabel htmlFor="session-chapter">{t(schedule.chapterOptional)}</FieldLabel>

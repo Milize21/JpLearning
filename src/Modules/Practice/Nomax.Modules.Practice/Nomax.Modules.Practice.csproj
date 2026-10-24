@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Practice module (docs/02 §3): question bank, generator, drilling, mastery and weaknesses; quizzes, assignments and grades in phase 3. -->
+  <PropertyGroup>
+    <RootNamespace>Nomax.Modules.Practice</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\Nomax.BuildingBlocks\Nomax.BuildingBlocks.csproj" />
+    <ProjectReference Include="..\Nomax.Modules.Practice.Contracts\Nomax.Modules.Practice.Contracts.csproj" />
+    <ProjectReference Include="..\..\Classroom\Nomax.Modules.Classroom.Contracts\Nomax.Modules.Classroom.Contracts.csproj" />
+    <ProjectReference Include="..\..\Content\Nomax.Modules.Content.Contracts\Nomax.Modules.Content.Contracts.csproj" />
+    <ProjectReference Include="..\..\Identity\Nomax.Modules.Identity.Contracts\Nomax.Modules.Identity.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Nomax.Modules.Practice.Tests" />
+    <InternalsVisibleTo Include="Nomax.IntegrationTests" />
+  </ItemGroup>
+</Project>

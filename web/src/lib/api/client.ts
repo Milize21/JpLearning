@@ -4,6 +4,7 @@ import { toApiError } from "./errors";
 import type { paths as ClassroomPaths } from "./schema/classroom";
 import type { paths as ContentPaths } from "./schema/content";
 import type { paths as IdentityPaths } from "./schema/identity";
+import type { paths as PracticePaths } from "./schema/practice";
 
 /**
  * Typed API clients per module, generated from OpenAPI (docs/05 §14). Requests go to the same origin
@@ -55,3 +56,7 @@ contentApi.use(auth);
 
 export const classroomApi = createClient<ClassroomPaths>({ baseUrl: window.location.origin });
 classroomApi.use(auth);
+
+export const practiceApi = createClient<PracticePaths>({ baseUrl: window.location.origin });
+practiceApi.use(auth);
+

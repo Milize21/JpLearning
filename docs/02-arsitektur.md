@@ -139,8 +139,9 @@ Dilarang: mereferensikan proyek internal modul lain, memakai DbContext modul lai
 
 | Contracts | Interface | Dipakai oleh | Fungsi utama |
 |---|---|---|---|
-| Identity | `IUserDirectory` | Classroom, Practice, Insight | Profil ringkas berdasarkan daftar id: nama tampilan, peran, aktif, zona waktu, locale, email (khusus notifikasi) |
+| Identity | `IUserDirectory` | Classroom, Practice, Insight | Profil ringkas berdasarkan daftar id atau daftar username persis: nama tampilan, peran, aktif, zona waktu, locale, email (khusus notifikasi) |
 | Content | `IContentCatalog` | Classroom, Practice | Validasi dan info Level/Buku/Bab; level dari sebuah bab; urutan bab dalam buku |
+| Content | `IContentUsageProbe` (diimplementasikan modul lain) | Content | Content bertanya ke setiap modul yang menyimpan referensi konten sebelum menghapus level/buku/bab/data referensi (BR-KONTEN-03) dan sebelum menganggap file yatim (BR-FILE-05). Classroom mengimplementasikannya sejak Fase 1, Practice sejak Fase 2 |
 | Content | `IReferenceDataReader` | Practice (generator) | Daftar kana/kanji/kosakata/tata bahasa/kalimat per level dan bab |
 | Content | `IStoredFileService` | Practice (tugas) | Validasi file (status, pengunggah, purpose) dan pembuatan URL unduhan bertanda tangan |
 | Classroom | `IClassAccessReader` | Content, Practice, Insight | `IsTeacherOf`, `IsStudentOf`, `CanTeacherSeeStudent`, `IsChapterAccessible`, `GetAccessibleChapterIds`, `GetStudentClassIds`, `GetTeacherClassIds`, `GetClassInfo`, `GetClassStudentIds` |
@@ -150,16 +151,50 @@ Interface baru wajib dicatat di tabel ini sebelum dipakai.
 Signature yang sudah diimplementasikan:
 
 ```csharp
-// Nomax.Modules.Identity.Contracts (Fase 0.2)
+// Nomax.Modules.Identity.Contracts (Fase 0.2; FindByUsernamesAsync Fase 1.3)
 Task<IReadOnlyDictionary<Guid, UserSummary>> IUserDirectory.GetUsersAsync(IReadOnlyCollection<Guid> userIds, CancellationToken ct);
+Task<IReadOnlyDictionary<string, UserSummary>> IUserDirectory.FindByUsernamesAsync(IReadOnlyCollection<string> usernames, CancellationToken ct);
 record UserSummary(Guid Id, string Username, string DisplayName, string Role, bool IsActive, string Timezone, string UiLocale, string? Email);
+
+// Nomax.Modules.Content.Contracts (Fase 1.1–1.2)
+Task<LevelInfo?> IContentCatalog.GetLevelAsync(Guid levelId, CancellationToken ct);
+Task<BookInfo?> IContentCatalog.GetBookAsync(Guid bookId, CancellationToken ct);
+Task<ChapterInfo?> IContentCatalog.GetChapterAsync(Guid chapterId, CancellationToken ct);
+Task<IReadOnlyDictionary<Guid, ChapterInfo>> IContentCatalog.GetChaptersAsync(IReadOnlyCollection<Guid> chapterIds, CancellationToken ct);
+Task<IReadOnlyList<ChapterInfo>> IContentCatalog.GetBookChaptersAsync(Guid bookId, CancellationToken ct);
+Task<bool> IContentUsageProbe.IsUsedAsync(ContentUsageTarget target, Guid id, CancellationToken ct); // Level, Book, Chapter, ReferenceItem, File
+Task<IReadOnlySet<Guid>> IContentUsageProbe.GetUsedFileIdsAsync(IReadOnlyCollection<Guid> fileIds, CancellationToken ct);
+Task<IReadOnlyDictionary<Guid, StoredFileInfo>> IStoredFileService.GetFilesAsync(IReadOnlyCollection<Guid> fileIds, CancellationToken ct);
+string IStoredFileService.CreateDownloadUrl(Guid fileId); // URL relatif bertanda tangan 5 menit; pemanggil sudah mengecek akses
+
+// Nomax.Modules.Classroom.Contracts (Fase 1.3). "Murid" selalu berarti anggota berstatus active.
+Task<bool> IClassAccessReader.IsTeacherOfAsync(Guid teacherId, Guid classId, CancellationToken ct);
+Task<bool> IClassAccessReader.IsStudentOfAsync(Guid studentId, Guid classId, CancellationToken ct);
+Task<bool> IClassAccessReader.CanTeacherSeeStudentAsync(Guid teacherId, Guid studentId, CancellationToken ct);
+Task<bool> IClassAccessReader.IsChapterAccessibleAsync(Guid studentId, Guid chapterId, CancellationToken ct); // BR-AKSES-01
+Task<IReadOnlySet<Guid>> IClassAccessReader.GetAccessibleChapterIdsAsync(Guid studentId, CancellationToken ct);
+Task<IReadOnlyList<Guid>> IClassAccessReader.GetStudentClassIdsAsync(Guid studentId, CancellationToken ct);
+Task<IReadOnlyList<Guid>> IClassAccessReader.GetTeacherClassIdsAsync(Guid teacherId, CancellationToken ct);
+Task<ClassInfo?> IClassAccessReader.GetClassInfoAsync(Guid classId, CancellationToken ct);
+Task<IReadOnlyList<Guid>> IClassAccessReader.GetClassStudentIdsAsync(Guid classId, CancellationToken ct);
+
+// Nomax.Modules.Content.Contracts (Fase 2.2) — hanya item yang sudah dipetakan ke bab (BR-KONTEN-04)
+Task<IReadOnlyList<KanaItem>> IReferenceDataReader.GetKanaAsync(Guid levelId, CancellationToken ct);
+Task<IReadOnlyList<KanjiItem>> IReferenceDataReader.GetKanjiAsync(Guid levelId, CancellationToken ct);
+Task<IReadOnlyList<VocabItem>> IReferenceDataReader.GetVocabAsync(Guid levelId, CancellationToken ct);
+Task<IReadOnlyList<SentenceItem>> IReferenceDataReader.GetSentencesAsync(Guid levelId, CancellationToken ct);
+Task<IReadOnlyList<ReferenceItemLabel>> IReferenceDataReader.GetLabelsAsync(IReadOnlyCollection<(ReferenceItemKind Kind, Guid Id)> items, CancellationToken ct); // label item kelemahan
 ```
+
+`IReferenceDataReader` dibuat di Fase 2.2 bersama generator soal, konsumen pertamanya. Practice juga mengimplementasikan `IContentUsageProbe` untuk soal (level, bab, item referensi) dan file impor soal.
+
+Nama di kode: entitas kelas bernama `StudyClass` karena `Class` ditolak analyzer CA1716 (lihat [glosarium](glosarium.md)).
 
 ### 6.3 Integration event lewat outbox (D-03 🟡)
 
 1. Producer menyimpan perubahan dan baris `outbox_messages` dalam **satu transaksi** DbContext modulnya.
-2. `OutboxProcessor` (BackgroundService per modul, interval 1 detik) mengambil pesan dengan `FOR UPDATE SKIP LOCKED`, lalu memanggil semua `IIntegrationEventHandler<T>` yang terdaftar (in-process).
-3. Consumer mencatat `inbox_messages(message_id, handler)` di schema-nya sendiri dalam transaksi yang sama dengan efek handler, sehingga handler **idempoten**.
+2. `OutboxProcessor` (BackgroundService per modul, interval 1 detik) mengambil pesan dengan `FOR UPDATE SKIP LOCKED`, lalu memanggil semua `IIntegrationEventConsumer<T>` yang terdaftar (in-process, `AddIntegrationEventConsumer<TEvent, TConsumer>()`). Nama `…Handler` ditolak analyzer CA1711.
+3. Consumer mencatat `inbox_messages(message_id, handler)` di schema-nya sendiri dalam transaksi yang sama dengan efek handler, sehingga handler **idempoten** (kelas dasar `InboxConsumer<TContext, TEvent>`).
 4. Gagal: `attempts` bertambah, backoff eksponensial; setelah 10 kali ditandai gagal dan dicatat sebagai error.
 5. Pesan tanpa handler langsung ditandai terproses.
 6. Daftar event dan payload: [05](05-api-dan-event.md) §8. Event baru wajib didokumentasikan di sana sebelum dipakai.

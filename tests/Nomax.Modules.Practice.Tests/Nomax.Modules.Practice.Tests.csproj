@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Unit tests of the Practice module: business rules (BR-*) in Domain/ as pure code. -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Modules\Practice\Nomax.Modules.Practice\Nomax.Modules.Practice.csproj" />
+  </ItemGroup>
+</Project>

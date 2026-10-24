@@ -2,8 +2,12 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Nomax.IntegrationTests.Support;
+using Nomax.Modules.Content.Infrastructure.Files;
 using Nomax.SharedKernel;
+using Npgsql;
 
 namespace Nomax.IntegrationTests.Content;
 
@@ -181,6 +185,66 @@ public sealed class ContentEndpointsTests(NomaxApiFixture api)
         wrongRole.Headers.Add("Upload-Metadata", Metadata(("filename", "a.pdf"), ("purpose", "material")));
         using var wrongRoleResponse = await client.SendAsync(wrongRole, Cancel);
         wrongRoleResponse.StatusCode.ShouldBe(HttpStatusCode.Forbidden);
+    }
+
+    [Fact]
+    public async Task BR_FILE_03_05_cleanup_expires_stale_uploads_and_deletes_orphans_but_keeps_used_files()
+    {
+        using var client = api.CreateClient();
+        var stale = await StartUploadAsync(client, 10);
+        var orphan = await UploadAsync(client, RandomNumberGenerator.GetBytes(16));
+        var used = await UploadAsync(client, RandomNumberGenerator.GetBytes(16));
+        var fresh = await UploadAsync(client, RandomNumberGenerator.GetBytes(16));
+        await client.JsonAsync("POST", $"/api/content/chapters/{Chapter1}/materials", Sensei, new { kind = "file", title = new { id = "Dipakai" }, fileId = used });
+
+        // Age the rows instead of the clock: 25 hours for the unfinished upload, 8 days for the finished files.
+        await ExecuteAsync($"update content.stored_files set created_at = now() - interval '25 hours' where id = '{stale}'");
+        await ExecuteAsync($"update content.stored_files set created_at = now() - interval '8 days' where id in ('{orphan}', '{used}')");
+
+        var cleanup = api.Services.GetServices<IHostedService>().OfType<UploadCleanup>().Single();
+        await cleanup.RunOnceAsync(Cancel);
+
+        (await StatusOfAsync(stale)).ShouldBe("failed");
+        (await StatusOfAsync(orphan)).ShouldBe("deleted");
+        (await StatusOfAsync(used)).ShouldBe("ready");
+        (await StatusOfAsync(fresh)).ShouldBe("ready");
+    }
+
+    private static async Task<Guid> StartUploadAsync(HttpClient client, long length) =>
+        (await CreateUploadAsync(client, length)).Id;
+
+    private static async Task<(Guid Id, string Location)> CreateUploadAsync(HttpClient client, long length)
+    {
+        using var create = Tus(HttpMethod.Post, "/api/content/uploads", Sensei);
+        create.Headers.Add("Upload-Length", length.ToString(System.Globalization.CultureInfo.InvariantCulture));
+        create.Headers.Add("Upload-Metadata", Metadata(("filename", "x.bin"), ("purpose", "material")));
+        using var created = await client.SendAsync(create, Cancel);
+        created.StatusCode.ShouldBe(HttpStatusCode.Created);
+        var location = created.Headers.Location!.ToString();
+        return (Guid.Parse(location[(location.LastIndexOf('/') + 1)..]), location);
+    }
+
+    private static async Task<Guid> UploadAsync(HttpClient client, byte[] data)
+    {
+        var (id, location) = await CreateUploadAsync(client, data.Length);
+        await PatchAsync(client, location, 0, data);
+        return id;
+    }
+
+    private async Task ExecuteAsync(string sql)
+    {
+        await using var connection = new NpgsqlConnection(api.PostgresConnectionString);
+        await connection.OpenAsync(Cancel);
+        await using var command = new NpgsqlCommand(sql, connection);
+        (await command.ExecuteNonQueryAsync(Cancel)).ShouldBeGreaterThan(0);
+    }
+
+    private async Task<string> StatusOfAsync(Guid fileId)
+    {
+        await using var connection = new NpgsqlConnection(api.PostgresConnectionString);
+        await connection.OpenAsync(Cancel);
+        await using var command = new NpgsqlCommand($"select status from content.stored_files where id = '{fileId}'", connection);
+        return (string)(await command.ExecuteScalarAsync(Cancel))!;
     }
 
     private static HttpRequestMessage Tus(HttpMethod method, string path, string token)

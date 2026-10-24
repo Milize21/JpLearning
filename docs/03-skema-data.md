@@ -824,7 +824,8 @@ Seed harus **idempoten** (aman dijalankan berulang).
 | Kana | hiragana baris a, ka, sa; source "Tabel kana (fakta umum)", license `public-domain` |
 | Pengguna | lewat realm export Keycloak: 1 admin, 1 sensei, 2 murid (kredensial dev di `infra/README.md`) + profil yang cocok |
 | Kelas | "Kelas Demo Dasar": sensei sebagai pengajar utama, 2 murid, Bab 1 terbuka |
-| Sumber soal | "Internal NomaX" (license `internal`) |
+| Sumber soal | "Internal NomaX" (license `internal`); di luar dev sumber ini dibuat otomatis saat soal staf pertama disimpan |
+| Soal ➕ | Soal kana hasil generator (BR-SOAL-05: kana → romaji, romaji → kana, kana → ketik romaji) untuk kana seed, langsung `published` agar drilling bisa dicoba; sumber = sumber data kana |
 | Season | satu season aktif per level (Fase 4) |
 | Skema nilai | default untuk kelas demo (Fase 3) |
 

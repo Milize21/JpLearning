@@ -24,7 +24,9 @@ function storeId(id: string | null) {
 
 /** VAPID keys are base64url; PushManager wants the raw bytes. */
 function keyBytes(base64Url: string): Uint8Array<ArrayBuffer> {
-  const padded = (base64Url + "=".repeat((4 - (base64Url.length % 4)) % 4)).replace(/-/gu, "+").replace(/_/gu, "/");
+  const padded = (base64Url + "=".repeat((4 - (base64Url.length % 4)) % 4))
+    .replace(/-/gu, "+")
+    .replace(/_/gu, "/");
   const raw = window.atob(padded);
   const bytes = new Uint8Array(new ArrayBuffer(raw.length));
   for (let i = 0; i < raw.length; i++) bytes[i] = raw.charCodeAt(i);
@@ -32,7 +34,10 @@ function keyBytes(base64Url: string): Uint8Array<ArrayBuffer> {
 }
 
 const isSupported = () =>
-  typeof window !== "undefined" && "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
+  typeof window !== "undefined" &&
+  "serviceWorker" in navigator &&
+  "PushManager" in window &&
+  "Notification" in window;
 
 /**
  * Web push reminders on this device (docs/07 §11 flow 10). Permission is asked only when the user presses the button,

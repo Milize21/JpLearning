@@ -34,7 +34,9 @@ export function useClasses() {
   return useQuery({
     queryKey: classroomKeys.classes,
     queryFn: async () => {
-      const { data } = await classroomApi.GET("/api/classroom/classes", { params: { query: { pageSize: 100 } } });
+      const { data } = await classroomApi.GET("/api/classroom/classes", {
+        params: { query: { pageSize: 100 } },
+      });
       return (data as Schemas["PagedResultOfClassDto"]).items;
     },
   });
@@ -46,7 +48,9 @@ export function useClass(id: string | undefined) {
     enabled: id !== undefined,
     retry: false,
     queryFn: async () => {
-      const { data } = await classroomApi.GET("/api/classroom/classes/{id}", { params: { path: { id: id ?? "" } } });
+      const { data } = await classroomApi.GET("/api/classroom/classes/{id}", {
+        params: { path: { id: id ?? "" } },
+      });
       return data as ClassDto;
     },
   });
@@ -57,7 +61,9 @@ export function useClassStudents(id: string, enabled = true) {
     queryKey: classroomKeys.students(id),
     enabled,
     queryFn: async () => {
-      const { data } = await classroomApi.GET("/api/classroom/classes/{id}/students", { params: { path: { id } } });
+      const { data } = await classroomApi.GET("/api/classroom/classes/{id}/students", {
+        params: { path: { id } },
+      });
       return data as ClassStudentDto[];
     },
   });
@@ -69,7 +75,9 @@ export function useClassTeachers(id: string, enabled = true) {
     enabled,
     retry: false,
     queryFn: async () => {
-      const { data } = await classroomApi.GET("/api/classroom/classes/{id}/teachers", { params: { path: { id } } });
+      const { data } = await classroomApi.GET("/api/classroom/classes/{id}/teachers", {
+        params: { path: { id } },
+      });
       return data as TeacherDto[];
     },
   });
@@ -80,7 +88,9 @@ export function useClassUnlocks(id: string | undefined) {
     queryKey: classroomKeys.unlocks(id ?? ""),
     enabled: id !== undefined,
     queryFn: async () => {
-      const { data } = await classroomApi.GET("/api/classroom/classes/{id}/unlocks", { params: { path: { id: id ?? "" } } });
+      const { data } = await classroomApi.GET("/api/classroom/classes/{id}/unlocks", {
+        params: { path: { id: id ?? "" } },
+      });
       return data as ClassUnlockDto[];
     },
   });
@@ -111,7 +121,9 @@ export function useMySchedule() {
   return useQuery({
     queryKey: classroomKeys.schedule,
     queryFn: async () => {
-      const { data } = await classroomApi.GET("/api/classroom/me/schedule", { params: { query: scheduleWindow() } });
+      const { data } = await classroomApi.GET("/api/classroom/me/schedule", {
+        params: { query: scheduleWindow() },
+      });
       return data as SessionDto[];
     },
   });
@@ -137,7 +149,10 @@ export function useUpdateClass(id: string) {
   const invalidate = useInvalidateClassroom();
   return useMutation({
     mutationFn: async (body: Schemas["UpdateClassRequest"]) => {
-      const { data } = await classroomApi.PATCH("/api/classroom/classes/{id}", { params: { path: { id } }, body });
+      const { data } = await classroomApi.PATCH("/api/classroom/classes/{id}", {
+        params: { path: { id } },
+        body,
+      });
       return data as ClassDto;
     },
     onSuccess: invalidate,
@@ -158,7 +173,10 @@ export function useAddStudents(id: string) {
   const invalidate = useInvalidateClassroom();
   return useMutation({
     mutationFn: async (body: Schemas["AddStudentsRequest"]) => {
-      const { data } = await classroomApi.POST("/api/classroom/classes/{id}/students", { params: { path: { id } }, body });
+      const { data } = await classroomApi.POST("/api/classroom/classes/{id}/students", {
+        params: { path: { id } },
+        body,
+      });
       return data as AddStudentsResponse;
     },
     onSuccess: invalidate,
@@ -169,7 +187,9 @@ export function useRemoveStudent(id: string) {
   const invalidate = useInvalidateClassroom();
   return useMutation({
     mutationFn: async (studentId: string) => {
-      await classroomApi.DELETE("/api/classroom/classes/{id}/students/{studentId}", { params: { path: { id, studentId } } });
+      await classroomApi.DELETE("/api/classroom/classes/{id}/students/{studentId}", {
+        params: { path: { id, studentId } },
+      });
     },
     onSuccess: invalidate,
   });
@@ -189,7 +209,9 @@ export function useRemoveTeacher(id: string) {
   const invalidate = useInvalidateClassroom();
   return useMutation({
     mutationFn: async (teacherId: string) => {
-      await classroomApi.DELETE("/api/classroom/classes/{id}/teachers/{teacherId}", { params: { path: { id, teacherId } } });
+      await classroomApi.DELETE("/api/classroom/classes/{id}/teachers/{teacherId}", {
+        params: { path: { id, teacherId } },
+      });
     },
     onSuccess: invalidate,
   });
@@ -214,7 +236,10 @@ export function useCreateSession(classId: string) {
   const invalidate = useInvalidateClassroom();
   return useMutation({
     mutationFn: async (body: CreateSessionRequest) => {
-      const { data } = await classroomApi.POST("/api/classroom/classes/{id}/sessions", { params: { path: { id: classId } }, body });
+      const { data } = await classroomApi.POST("/api/classroom/classes/{id}/sessions", {
+        params: { path: { id: classId } },
+        body,
+      });
       return data as SessionDto;
     },
     onSuccess: invalidate,
@@ -225,7 +250,10 @@ export function useUpdateSession() {
   const invalidate = useInvalidateClassroom();
   return useMutation({
     mutationFn: async ({ id, changes }: { id: string; changes: UpdateSessionRequest }) => {
-      const { data } = await classroomApi.PATCH("/api/classroom/sessions/{id}", { params: { path: { id } }, body: changes });
+      const { data } = await classroomApi.PATCH("/api/classroom/sessions/{id}", {
+        params: { path: { id } },
+        body: changes,
+      });
       return data as SessionDto;
     },
     onSuccess: invalidate,

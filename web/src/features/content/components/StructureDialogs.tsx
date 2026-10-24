@@ -25,7 +25,8 @@ import {
   type ChapterSummaryDto,
   type LevelDto,
 } from "../api/content";
-import { emptyTextBlock, TextBlockInput, textBlockSchema } from "./TextBlockInput";
+import { emptyTextBlock, textBlockSchema } from "./textBlockForm";
+import { TextBlockInput } from "./TextBlockInput";
 
 type Target =
   | { kind: "level"; level?: LevelDto }
@@ -67,7 +68,8 @@ function StructureForm({ target, onClose }: { target: Target; onClose: () => voi
   const saveBook = useSaveBook();
   const saveChapter = useSaveChapter();
   const [formError, setFormError] = useState<string | null>(null);
-  const existing = target.kind === "level" ? target.level : target.kind === "book" ? target.book : target.chapter;
+  const existing =
+    target.kind === "level" ? target.level : target.kind === "book" ? target.book : target.chapter;
   const editing = existing !== undefined;
 
   const form = useForm<FormValues>({
@@ -77,7 +79,13 @@ function StructureForm({ target, onClose }: { target: Target; onClose: () => voi
       number: target.kind === "chapter" ? (target.chapter?.number ?? target.nextNumber) : 1,
       sortOrder: existing?.sortOrder ?? (target.kind === "chapter" ? target.nextNumber : 0),
       text: existing
-        ? textBlockToFields(target.kind === "level" ? target.level?.name : target.kind === "book" ? target.book?.title : target.chapter?.title)
+        ? textBlockToFields(
+            target.kind === "level"
+              ? target.level?.name
+              : target.kind === "book"
+                ? target.book?.title
+                : target.chapter?.title,
+          )
         : emptyTextBlock,
     },
   });
@@ -92,9 +100,15 @@ function StructureForm({ target, onClose }: { target: Target; onClose: () => voi
     const text = fieldsToTextBlock(values.text);
     try {
       if (target.kind === "level") {
-        await saveLevel.mutateAsync({ level: target.level, input: { code: values.code, name: text, sortOrder: values.sortOrder } });
+        await saveLevel.mutateAsync({
+          level: target.level,
+          input: { code: values.code, name: text, sortOrder: values.sortOrder },
+        });
       } else if (target.kind === "book") {
-        await saveBook.mutateAsync({ book: target.book, input: { levelId: target.levelId, title: text, sortOrder: values.sortOrder } });
+        await saveBook.mutateAsync({
+          book: target.book,
+          input: { levelId: target.levelId, title: text, sortOrder: values.sortOrder },
+        });
       } else {
         await saveChapter.mutateAsync({
           chapter: target.chapter,
@@ -112,7 +126,11 @@ function StructureForm({ target, onClose }: { target: Target; onClose: () => voi
   const labels = titles[target.kind];
 
   return (
-    <DialogContent closeLabel={t(common.close)} aria-describedby={undefined} className="max-h-[90dvh] overflow-y-auto">
+    <DialogContent
+      closeLabel={t(common.close)}
+      aria-describedby={undefined}
+      className="max-h-[90dvh] overflow-y-auto"
+    >
       <DialogHeader>
         <DialogTitle>
           <Label value={editing ? labels.edit : labels.create} companion="inline" />

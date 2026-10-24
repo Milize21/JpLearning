@@ -74,6 +74,8 @@ export const members = {
   makePrimary: tb("Jadikan pengajar utama", "Make primary teacher", "{担任|たんにん} に する"), // ja-review
   teacherAdded: tb("Pengajar ditambahkan", "Teacher added", "{追加|ついか} しました"), // ja-review
   removeTeacher: tb("Hapus pengajar", "Remove teacher", "{先生|せんせい} {を||o} {外|はず}す"), // ja-review
+  removeTeacherTitle: tb("Hapus {{name}} dari pengajar kelas?", "Remove {{name}} as a teacher of the class?", "{先生|せんせい} から {外|はず}しますか"), // ja-review
+  removeTeacherBody: tb("Ia tidak lagi melihat murid dan nilai kelas ini. Materi yang ia buat tetap ada.", "They no longer see this class's students and grades. Materials they made stay.", "{作成|さくせい} した {教材|きょうざい} {は||wa} {残|のこ}ります"), // ja-review
   lastTeacher: tb("Pengajar terakhir tidak bisa dihapus.", "The last teacher can't be removed.", "{最後|さいご} の {先生|せんせい} {は||wa} {外|はず}せません"), // ja-review
   onlyPrimary: tb("Hanya pengajar utama atau admin yang mengatur pengajar.", "Only the primary teacher or an admin manages teachers.", "{担任|たんにん} または {管理者|かんりしゃ} のみ"), // ja-review
   empty: tb("Belum ada murid di kelas ini", "No students in this class yet", "{生徒|せいと} {は||wa} まだ いません"), // ja-review

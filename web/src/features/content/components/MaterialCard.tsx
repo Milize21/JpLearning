@@ -1,4 +1,15 @@
-import { CalendarClock, ChevronDown, ChevronUp, Download, ExternalLink, FileText, Link2, Pencil, ScrollText, Trash2 } from "lucide-react";
+import {
+  CalendarClock,
+  ChevronDown,
+  ChevronUp,
+  Download,
+  ExternalLink,
+  FileText,
+  Link2,
+  Pencil,
+  ScrollText,
+  Trash2,
+} from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useCurrentUser } from "@/app/current-user";
@@ -69,7 +80,9 @@ export function MaterialCard({
             </Badge>
           )}
           {material.kind === "link" && material.url && (
-            <span className="text-body-sm text-ink-muted">{t(materials.externalLink, { domain: domainOf(material.url) })}</span>
+            <span className="text-body-sm text-ink-muted">
+              {t(materials.externalLink, { domain: domainOf(material.url) })}
+            </span>
           )}
           {material.kind === "file" && material.file && (
             <span className="truncate text-body-sm text-ink-muted">
@@ -142,7 +155,9 @@ export function MaterialCard({
           className="self-start"
           loading={download.isPending}
           onClick={() => {
-            download.mutate(material.id, { onError: (error) => toast.error(t(errorLabel(errorCode(error)))) });
+            download.mutate(material.id, {
+              onError: (error) => toast.error(t(errorLabel(errorCode(error)))),
+            });
           }}
         >
           <Download aria-hidden="true" />

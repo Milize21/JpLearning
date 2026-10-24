@@ -19,6 +19,10 @@ docker compose -f infra/docker-compose.yml ps
 # 3. Rahasia API lewat user-secrets (sekali per mesin). Samakan dengan isi infra/.env.
 dotnet user-secrets set "ConnectionStrings:Postgres" "Host=localhost;Port=5432;Database=nomax;Username=nomax;Password=<POSTGRES_PASSWORD>" --project src/Nomax.Api
 dotnet user-secrets set "Keycloak:AdminClientSecret" "<NOMAX_API_CLIENT_SECRET>" --project src/Nomax.Api
+# Opsional: web push untuk pengingat jadwal. Tanpa kunci ini pengingat hanya lewat email (Mailpit di dev).
+node scripts/vapid-keys.mjs
+dotnet user-secrets set "WebPush:PublicKey" "<publicKey>" --project src/Nomax.Api
+dotnet user-secrets set "WebPush:PrivateKey" "<privateKey>" --project src/Nomax.Api
 
 # 4. Jalankan API dan Gateway (dua terminal).
 dotnet run --project src/Nomax.Api
@@ -42,6 +46,7 @@ node scripts/dev-live.mjs restart api     # api | gateway | web
 node scripts/dev-live.mjs stop            # hentikan aplikasi (Docker tetap jalan)
 node scripts/dev-live.mjs run             # di terminal ini (Ctrl+C berhenti)
 ```
+
 
 Log: `.live/logs/` (`supervisor.log`, `api.log`, `gateway.log`, `web.log`, `build.log`). Folder `.live/` tidak di-commit.
 

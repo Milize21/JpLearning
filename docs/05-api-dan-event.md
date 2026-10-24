@@ -128,9 +128,9 @@ Rincian kontrak Identity (diimplementasikan Fase 0.2; skema lengkap di `/openapi
 | POST | `/classes` | staf | Pembuat menjadi pengajar utama | 1 |
 | GET · PATCH | `/classes/{id}` | anggota (GET), pengajar, admin | | 1 |
 | POST | `/classes/{id}/archive` | pengajar utama, admin | | 1 |
-| GET · POST | `/classes/{id}/students` | pengajar, admin | Tambah murid berdasarkan daftar id | 1 |
+| GET · POST | `/classes/{id}/students` | pengajar, admin | Tambah murid berdasarkan daftar `studentIds` dan/atau `usernames` (persis, maks. 200). Respons `{ added, notFound }`; username yang bukan akun murid aktif masuk `notFound`, jadi sensei tidak bisa mencari murid lain (docs/01 §4) | 1 |
 | DELETE | `/classes/{id}/students/{studentId}` | pengajar, admin | Status `removed` | 1 |
-| GET · POST · DELETE | `/classes/{id}/teachers[/{teacherId}]` | pengajar utama, admin | BR-AKSES-03 | 1 |
+| GET · POST · DELETE | `/classes/{id}/teachers[/{teacherId}]` | pengajar utama, admin | BR-AKSES-03. POST menerima `teacherId` atau `username`, plus `isPrimary` | 1 |
 | GET | `/classes/{id}/unlocks` | anggota, pengajar, admin | | 1 |
 | PUT | `/classes/{id}/unlocks/{chapterId}` | pengajar, admin | Buka bab (idempoten) → `ChapterUnlocked` | 1 |
 | DELETE | `/classes/{id}/unlocks/{chapterId}` | pengajar, admin | Tutup bab → `ChapterLocked` | 1 |
@@ -153,8 +153,10 @@ Rincian kontrak Identity (diimplementasikan Fase 0.2; skema lengkap di `/openapi
 |---|---|---|---|---|
 | GET | `/questions?levelId=&chapterId=&category=&status=&scope=&q=` | staf | Sensei: `builtin` + milik sendiri; admin: semua | 2 |
 | POST | `/questions` | staf | Validasi payload per `kind` ([03](03-skema-data.md) §8) | 2 |
-| GET · PATCH | `/questions/{id}` | pemilik, admin | BR-SOAL-04 | 2 |
-| POST | `/questions/{id}/submit-review` · `/publish` · `/archive` · `/duplicate` | pemilik, admin | BR-SOAL-02 | 2 |
+| GET · PATCH | `/questions/{id}` | pemilik, admin (GET: juga staf untuk soal `builtin`) | BR-SOAL-04: respons memuat `hasAnswers`; mengubah isi soal yang sudah dijawab → 409 `invalid_state` | 2 |
+| GET ➕ | `/questions/{id}/student-view` | staf yang boleh melihat soal | Versi murid ([03](03-skema-data.md) §8.3) untuk pratinjau penulis | 2 |
+| POST | `/questions/{id}/submit-review` · `/publish` · `/archive` · `/duplicate` | pemilik, admin (`duplicate`: staf yang boleh melihat) | BR-SOAL-02. `duplicate` membuat draf milik pemanggil dan mengarsipkan aslinya bila sudah dijawab dan milik pemanggil (BR-SOAL-04) | 2 |
+| POST ➕ | `/questions/publish` | admin | `{questionIds}` → `{published, skipped}`; terbit massal hasil review generator | 2 |
 | POST | `/questions/{id}/preview-answer` | staf | Evaluasi tanpa menyimpan (uji coba) | 2 |
 | GET · POST · PATCH | `/sources`, `/sources/{id}` | admin | | 2 |
 | POST | `/generator/runs` | admin | `levelId`, `chapterIds`, `templates` → draf `review` (BR-SOAL-05) | 2 |
@@ -163,7 +165,7 @@ Rincian kontrak Identity (diimplementasikan Fase 0.2; skema lengkap di `/openapi
 
 | Metode | Path | Peran | Aturan / catatan | Fase |
 |---|---|---|---|---|
-| POST | `/drill-sessions` | murid | `{category, chapterIds?, mode, inputMode, classId?}` → `{sessionId, poolSize, fallback?, batch}` | 2 |
+| POST | `/drill-sessions` | murid | `{category, chapterIds?, mode, inputMode, classId?}` → `{sessionId, poolSize, fallback?, batch}`. `inputMode`: `choice` (semua jenis kecuali tulis tangan), `type` (hanya `type_answer`), `handwrite` (Fase 5). Bab terkunci → 403 `chapter_locked` | 2 |
 | GET | `/drill-sessions/{id}/next?count=10` | pemilik | Batch soal versi aman | 2 |
 | POST | `/drill-sessions/{id}/answers` | pemilik | `{answerId, questionId, inputMode, answer, responseMs}` → `{isCorrect, correctAnswer, explanation, mastery: {before, after, status}}`; idempoten | 2 |
 | POST | `/drill-sessions/{id}/end` | pemilik | Ringkasan sesi | 2 |
@@ -171,8 +173,8 @@ Rincian kontrak Identity (diimplementasikan Fase 0.2; skema lengkap di `/openapi
 | POST | `/preview/drill` | staf | Mode uji coba (BR-AKSES-05) | 2 |
 | GET | `/classes/{id}/progress` | pengajar, admin | Per murid: terakhir latihan, jawaban 7 hari, akurasi, rata-rata mastery, kelompok lemah | 2 |
 | GET | `/students/{id}/weaknesses?classId=` · `/students/{id}/drill-sessions` | SenseiDari, admin | | 2 |
-| GET | `/comments?targetType=&targetId=` | murid (miliknya), staf | | 2 |
-| POST | `/comments` | staf | Komentar tanpa nilai | 2 |
+| GET | `/comments?targetType=&targetId=&studentId=` | murid (miliknya), staf | Staf: yang ia tulis, atau semua komentar untuk murid yang boleh ia lihat (`studentId`) | 2 |
+| POST | `/comments` | staf (SenseiDari, admin) | `{studentId, targetType, targetId, text}`. Fase 2: `drill_session` dan `progress` (target = kelas); `quiz_attempt`/`submission` menyusul di Fase 3. Komentar tanpa nilai | 2 |
 
 **Kuis, tugas, nilai**
 
@@ -180,10 +182,10 @@ Rincian kontrak Identity (diimplementasikan Fase 0.2; skema lengkap di `/openapi
 |---|---|---|---|---|
 | GET · POST | `/classes/{id}/quizzes` | pengajar, admin (murid: GET yang terbit) | | 3 |
 | GET · PATCH | `/quizzes/{id}` | pengajar, admin (murid: info tanpa soal) | BR-KUIS-10 | 3 |
-| PUT | `/quizzes/{id}/questions` | pengajar, admin | Daftar soal + poin + urutan | 3 |
+| GET · PUT | `/quizzes/{id}/questions` | pengajar, admin | Daftar soal + poin + urutan. PUT `{version, questions:[{questionId, points}]}` mengganti seluruh daftar; soal harus `published`, terlihat oleh pemanggil (BR-SOAL-03), dan bukan penilaian diri (BR-KUIS-07) | 3 |
 | POST | `/quizzes/{id}/publish` · `/archive` | pengajar, admin | | 3 |
 | POST | `/quizzes/{id}/attempts` | murid | Mulai/lanjutkan (BR-KUIS-01, 02) | 3 |
-| GET | `/attempts/{id}` | pemilik, pengajar, admin | Murid: soal versi aman; pembahasan sesuai BR-KUIS-09 | 3 |
+| GET | `/attempts/{id}` | pemilik, pengajar, admin | Murid: soal versi aman; pembahasan sesuai BR-KUIS-09. Respons memuat `serverNow` untuk hitung mundur. Attempt yang kedaluwarsa di-submit saat dibuka | 3 |
 | PUT | `/attempts/{id}/answers/{questionId}` | pemilik | Autosave (BR-KUIS-06) | 3 |
 | POST | `/attempts/{id}/submit` | pemilik | | 3 |
 | POST | `/attempts/{id}/answers/{questionId}/grade` | pengajar, admin | Nilai `long_answer` | 3 |
@@ -193,11 +195,11 @@ Rincian kontrak Identity (diimplementasikan Fase 0.2; skema lengkap di `/openapi
 | POST | `/assignments/{id}/publish` · `/archive` | pengajar, admin | | 3 |
 | PUT | `/assignments/{id}/submission` | murid | Kirim/kirim ulang (BR-TUGAS-01…03) | 3 |
 | GET | `/assignments/{id}/submissions` · `/submissions/{id}` | pengajar, admin · pemilik | | 3 |
-| GET | `/submissions/{id}/files/{fileId}/download` | pemilik, pengajar, admin | 302 ke URL bertanda tangan | 3 |
+| GET | `/submissions/{id}/files/{fileId}/download` | pemilik, pengajar, admin | 302 ke URL bertanda tangan; `?redirect=false` → `{url}` (sama dengan unduhan materi) | 3 |
 | POST | `/submissions/{id}/grade` | pengajar, admin | BR-TUGAS-04 | 3 |
 | GET | `/me/assignments` · `/me/grades` | murid | | 3 |
 | GET · PUT | `/classes/{id}/grade-scheme` | pengajar, admin | BR-NILAI-06 | 3 |
-| GET | `/classes/{id}/grades` | pengajar, admin | | 3 |
+| GET | `/classes/{id}/grades` | pengajar, admin | Dihitung ulang saat dibaca (D-37) | 3 |
 
 ## 7a. Katalog endpoint — Insight (`/api/insight`, `/hubs/leaderboard`)
 
@@ -210,6 +212,7 @@ Rincian kontrak Identity (diimplementasikan Fase 0.2; skema lengkap di `/openapi
 | GET | `/me/activity?cursor=` | semua | | 4 |
 | GET | `/students/{id}/activity?cursor=` | SenseiDari, admin | | 4 |
 | GET | `/classes/{id}/activity-summary` | pengajar, admin | Terakhir aktif per murid | 4 |
+
 
 ## 8. Integration event
 

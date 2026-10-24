@@ -1,9 +1,10 @@
-import { BookOpen, School, Users } from "lucide-react";
+import { Users } from "lucide-react";
 import { Link } from "react-router";
 import { useCurrentUser } from "@/app/current-user";
 import { Label } from "@/components/japanese/Label";
 import { Button } from "@/components/ui/button";
-import { Card, EmptyState, Skeleton } from "@/components/ui/misc";
+import { Card, Skeleton } from "@/components/ui/misc";
+import { MyClassesCard, NextSessionCard } from "@/features/classroom/components/HomeWidgets";
 import { useActiveAccountCount } from "@/features/identity/api/identity";
 import { home } from "@/i18n/labels/identity";
 import { useT } from "@/i18n/prefs";
@@ -23,26 +24,26 @@ function Greeting() {
 
 /** /murid — the student's dashboard; classes, schedule and practice arrive with Phases 1–4. */
 export function MuridHomePage() {
-  const t = useT();
   return (
     <div className="flex flex-col gap-6">
       <Greeting />
-      <EmptyState icon={BookOpen} title={<Label value={home.muridEmptyTitle} />}>
-        {t(home.muridEmptyBody)}
-      </EmptyState>
+      <div className="grid gap-6 lg:grid-cols-2">
+        <NextSessionCard />
+        <MyClassesCard />
+      </div>
     </div>
   );
 }
 
-/** /sensei — teacher dashboard; classes arrive in Phase 1. */
+/** /sensei — teacher dashboard: next session and the classes taught. */
 export function SenseiHomePage() {
-  const t = useT();
   return (
     <div className="flex flex-col gap-6">
       <Greeting />
-      <EmptyState icon={School} title={<Label value={home.senseiEmptyTitle} />}>
-        {t(home.senseiEmptyBody)}
-      </EmptyState>
+      <div className="grid gap-6 lg:grid-cols-2">
+        <NextSessionCard />
+        <MyClassesCard />
+      </div>
     </div>
   );
 }

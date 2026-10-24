@@ -20,6 +20,10 @@
     <Project Path="src/Modules/Classroom/Nomax.Modules.Classroom.Contracts/Nomax.Modules.Classroom.Contracts.csproj" />
     <Project Path="src/Modules/Classroom/Nomax.Modules.Classroom/Nomax.Modules.Classroom.csproj" />
   </Folder>
+  <Folder Name="/src/Modules/Practice/">
+    <Project Path="src/Modules/Practice/Nomax.Modules.Practice.Contracts/Nomax.Modules.Practice.Contracts.csproj" />
+    <Project Path="src/Modules/Practice/Nomax.Modules.Practice/Nomax.Modules.Practice.csproj" />
+  </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Nomax.ArchitectureTests/Nomax.ArchitectureTests.csproj" />
     <Project Path="tests/Nomax.BuildingBlocks.Tests/Nomax.BuildingBlocks.Tests.csproj" />
@@ -27,5 +31,6 @@
     <Project Path="tests/Nomax.Modules.Identity.Tests/Nomax.Modules.Identity.Tests.csproj" />
     <Project Path="tests/Nomax.Modules.Content.Tests/Nomax.Modules.Content.Tests.csproj" />
     <Project Path="tests/Nomax.Modules.Classroom.Tests/Nomax.Modules.Classroom.Tests.csproj" />
+    <Project Path="tests/Nomax.Modules.Practice.Tests/Nomax.Modules.Practice.Tests.csproj" />
   </Folder>
 </Solution>

@@ -45,6 +45,7 @@ public static class ContentModule
         services.AddHostedService<UploadCleanup>();
 
         services.AddScoped<IContentCatalog, ContentCatalog>();
+        services.AddScoped<IReferenceDataReader, ReferenceDataReader>();
         services.AddScoped<IStoredFileService, StoredFileService>();
         services.AddScoped<IDevelopmentSeeder, ContentDevelopmentSeeder>();
 

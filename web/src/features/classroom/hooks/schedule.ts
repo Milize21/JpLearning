@@ -29,7 +29,11 @@ export const groupLabels: Record<Group, UiLabel> = {
 };
 
 /** Groups by calendar day in the viewer's time zone (BR-JADWAL-08). */
-export function groupSessions(sessions: readonly SessionDto[], now: number, timeZone: string): Record<Group, SessionDto[]> {
+export function groupSessions(
+  sessions: readonly SessionDto[],
+  now: number,
+  timeZone: string,
+): Record<Group, SessionDto[]> {
   const groups: Record<Group, SessionDto[]> = { today: [], tomorrow: [], thisWeek: [], later: [], past: [] };
   const today = dayKey(new Date(now), timeZone);
   const tomorrow = dayKey(new Date(now + 86_400_000), timeZone);

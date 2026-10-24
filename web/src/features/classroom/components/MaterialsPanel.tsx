@@ -83,7 +83,14 @@ export function MaterialsPanel({ classInfo }: { classInfo: ClassDto }) {
           />
         ))}
       </div>
-      {selected && <MaterialFormDialog chapterId={selected} material={editing} open={formOpen} onOpenChange={setFormOpen} />}
+      {selected && (
+        <MaterialFormDialog
+          chapterId={selected}
+          material={editing}
+          open={formOpen}
+          onOpenChange={setFormOpen}
+        />
+      )}
       <ConfirmDialog
         open={deleting !== null}
         onOpenChange={(open) => {

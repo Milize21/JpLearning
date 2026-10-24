@@ -91,7 +91,9 @@ export function ChaptersPanel({ classInfo }: { classInfo: ClassDto }) {
               <span className="flex min-w-0 flex-1 flex-col">
                 <ContentText value={chapter.title} className="text-ink" />
                 <span className="text-caption text-ink-muted">
-                  {openedOn ? t(labels.openedOn, { date: formatDate(openedOn, uiLocale, me.timezone) }) : t(labels.locked)}
+                  {openedOn
+                    ? t(labels.openedOn, { date: formatDate(openedOn, uiLocale, me.timezone) })
+                    : t(labels.locked)}
                 </span>
               </span>
               <Switch

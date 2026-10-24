@@ -15,5 +15,6 @@
     <ProjectReference Include="..\Modules\Identity\Nomax.Modules.Identity\Nomax.Modules.Identity.csproj" />
     <ProjectReference Include="..\Modules\Content\Nomax.Modules.Content\Nomax.Modules.Content.csproj" />
     <ProjectReference Include="..\Modules\Classroom\Nomax.Modules.Classroom\Nomax.Modules.Classroom.csproj" />
+    <ProjectReference Include="..\Modules\Practice\Nomax.Modules.Practice\Nomax.Modules.Practice.csproj" />
   </ItemGroup>
 </Project>

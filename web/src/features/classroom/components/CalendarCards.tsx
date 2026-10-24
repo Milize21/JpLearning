@@ -47,7 +47,15 @@ export function CalendarFeedCard() {
       {url && (
         <div className="flex flex-col gap-2">
           <div className="flex gap-2">
-            <Input readOnly value={url} aria-label={t(calendarFeed.title)} className="font-mono text-body-sm" onFocus={(event) => event.target.select()} />
+            <Input
+              readOnly
+              value={url}
+              aria-label={t(calendarFeed.title)}
+              className="font-mono text-body-sm"
+              onFocus={(event) => {
+                event.target.select();
+              }}
+            />
             <Button
               variant="secondary"
               onClick={() => {
@@ -65,7 +73,9 @@ export function CalendarFeedCard() {
         </div>
       )}
       {!url && active && status.data?.createdAt && (
-        <p className="text-body-sm text-ink">{t(calendarFeed.active, { date: formatDate(status.data.createdAt, uiLocale, me.timezone) })}</p>
+        <p className="text-body-sm text-ink">
+          {t(calendarFeed.active, { date: formatDate(status.data.createdAt, uiLocale, me.timezone) })}
+        </p>
       )}
       <FieldHint>{t(calendarFeed.refreshNote)}</FieldHint>
       <div className="flex flex-wrap gap-2">

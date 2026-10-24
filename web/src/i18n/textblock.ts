@@ -45,7 +45,11 @@ export const textBlockToFields = (block: ApiTextBlock | null | undefined): TextB
 });
 
 /** Builds the request body; empty languages are left out. Markup must be valid (checked by the form first). */
-export function fieldsToTextBlock(fields: TextBlockFields): { id: string | null; en: string | null; ja: JaSegment[] | null } {
+export function fieldsToTextBlock(fields: TextBlockFields): {
+  id: string | null;
+  en: string | null;
+  ja: JaSegment[] | null;
+} {
   const ja = fields.ja.trim() === "" ? null : parseFurigana(fields.ja.trim()).segments;
   return {
     id: fields.id.trim() === "" ? null : fields.id.trim(),

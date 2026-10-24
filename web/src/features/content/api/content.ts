@@ -55,7 +55,8 @@ export const contentKeys = {
   book: (id: string) => ["content", "books", id] as const,
   chapter: (id: string) => ["content", "chapters", id] as const,
   materials: (chapterId: string) => ["content", "materials", chapterId] as const,
-  reference: (type: ReferenceType, filter: ReferenceFilter) => ["content", "reference", type, filter] as const,
+  reference: (type: ReferenceType, filter: ReferenceFilter) =>
+    ["content", "reference", type, filter] as const,
 };
 
 export function useLevels() {
@@ -74,7 +75,9 @@ export function useBook(id: string | undefined) {
     queryKey: contentKeys.book(id ?? ""),
     enabled: id !== undefined,
     queryFn: async () => {
-      const { data } = await contentApi.GET("/api/content/books/{id}", { params: { path: { id: id ?? "" } } });
+      const { data } = await contentApi.GET("/api/content/books/{id}", {
+        params: { path: { id: id ?? "" } },
+      });
       return data as BookDto;
     },
   });
@@ -99,7 +102,9 @@ export function useChapter(id: string | undefined) {
     enabled: id !== undefined,
     retry: false,
     queryFn: async () => {
-      const { data } = await contentApi.GET("/api/content/chapters/{id}", { params: { path: { id: id ?? "" } } });
+      const { data } = await contentApi.GET("/api/content/chapters/{id}", {
+        params: { path: { id: id ?? "" } },
+      });
       return data as ChapterDto;
     },
   });
@@ -185,7 +190,12 @@ export function useSaveChapter() {
       if (chapter) {
         await contentApi.PATCH("/api/content/chapters/{id}", {
           params: { path: { id: chapter.id } },
-          body: { version: chapter.version, number: input.number, title: input.title, sortOrder: input.sortOrder },
+          body: {
+            version: chapter.version,
+            number: input.number,
+            title: input.title,
+            sortOrder: input.sortOrder,
+          },
         });
         return;
       }
@@ -228,7 +238,10 @@ export function useUpdateMaterial(chapterId: string) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, changes }: { id: string; changes: UpdateMaterialRequest }) => {
-      const { data } = await contentApi.PATCH("/api/content/materials/{id}", { params: { path: { id } }, body: changes });
+      const { data } = await contentApi.PATCH("/api/content/materials/{id}", {
+        params: { path: { id } },
+        body: changes,
+      });
       return data as MaterialDto;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: contentKeys.materials(chapterId) }),
@@ -267,18 +280,30 @@ export function useReference<T extends ReferenceType>(type: T, filter: Reference
     enabled,
     placeholderData: keepPreviousData,
     queryFn: async () => {
-      const query = { query: { levelId: filter.levelId, chapterId: filter.chapterId, page: filter.page, pageSize: filter.pageSize } };
+      const query = {
+        query: {
+          levelId: filter.levelId,
+          chapterId: filter.chapterId,
+          page: filter.page,
+          pageSize: filter.pageSize,
+        },
+      };
       switch (type) {
         case "kana":
-          return (await contentApi.GET("/api/content/reference/kana", { params: query })).data as ReferencePage<T>;
+          return (await contentApi.GET("/api/content/reference/kana", { params: query }))
+            .data as ReferencePage<T>;
         case "kanji":
-          return (await contentApi.GET("/api/content/reference/kanji", { params: query })).data as ReferencePage<T>;
+          return (await contentApi.GET("/api/content/reference/kanji", { params: query }))
+            .data as ReferencePage<T>;
         case "vocab":
-          return (await contentApi.GET("/api/content/reference/vocab", { params: query })).data as ReferencePage<T>;
+          return (await contentApi.GET("/api/content/reference/vocab", { params: query }))
+            .data as ReferencePage<T>;
         case "grammar":
-          return (await contentApi.GET("/api/content/reference/grammar", { params: query })).data as ReferencePage<T>;
+          return (await contentApi.GET("/api/content/reference/grammar", { params: query }))
+            .data as ReferencePage<T>;
         default:
-          return (await contentApi.GET("/api/content/reference/sentences", { params: query })).data as ReferencePage<T>;
+          return (await contentApi.GET("/api/content/reference/sentences", { params: query }))
+            .data as ReferencePage<T>;
       }
     },
   });
@@ -325,7 +350,15 @@ export function useImportReference() {
 export function useMapReferenceChapter() {
   const invalidate = useInvalidateContent();
   return useMutation({
-    mutationFn: async ({ type, id, chapterId }: { type: ReferenceType; id: string; chapterId: string | null }) => {
+    mutationFn: async ({
+      type,
+      id,
+      chapterId,
+    }: {
+      type: ReferenceType;
+      id: string;
+      chapterId: string | null;
+    }) => {
       const body = chapterId ? { chapterId, unmapChapter: false } : { unmapChapter: true };
       const params = { params: { path: { id } }, body };
       switch (type) {

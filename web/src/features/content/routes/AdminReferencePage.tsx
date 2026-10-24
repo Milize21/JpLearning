@@ -85,7 +85,11 @@ export function AdminReferencePage() {
       />
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div role="tablist" aria-label={t(reference.title)} className="flex flex-wrap gap-1 border-b border-line">
+        <div
+          role="tablist"
+          aria-label={t(reference.title)}
+          className="flex flex-wrap gap-1 border-b border-line"
+        >
           {referenceTypes.map((item) => (
             <button
               key={item}
@@ -126,7 +130,9 @@ export function AdminReferencePage() {
       </div>
 
       {items.isPending && <Skeleton className="h-48" />}
-      {items.data?.items.length === 0 && <EmptyState icon={BookOpenText} title={<Label value={reference.empty} />} />}
+      {items.data?.items.length === 0 && (
+        <EmptyState icon={BookOpenText} title={<Label value={reference.empty} />} />
+      )}
       {items.data && items.data.items.length > 0 && (
         <div className="overflow-x-auto">
           <Table>
@@ -220,7 +226,13 @@ export function AdminReferencePage() {
         </div>
       )}
 
-      <ImportReferenceDialog open={importing} onOpenChange={setImporting} type={type} typeLabel={t(typeLabels[type])} level={level} />
+      <ImportReferenceDialog
+        open={importing}
+        onOpenChange={setImporting}
+        type={type}
+        typeLabel={t(typeLabels[type])}
+        level={level}
+      />
       <ConfirmDialog
         open={deleting !== null}
         onOpenChange={(open) => {
@@ -293,7 +305,8 @@ function ReferenceHeader({ type }: { type: ReferenceType }) {
 
 function ReferenceCells({ type, item }: { type: ReferenceType; item: ReferenceItems[ReferenceType] }) {
   const { uiLocale } = usePrefs();
-  const meanings = (value: { id: string[]; en: string[] }) => (uiLocale === "en" && value.en.length > 0 ? value.en : value.id).join(", ");
+  const meanings = (value: { id: string[]; en: string[] }) =>
+    (uiLocale === "en" && value.en.length > 0 ? value.en : value.id).join(", ");
   switch (type) {
     case "kana": {
       const kana = item as ReferenceItems["kana"];

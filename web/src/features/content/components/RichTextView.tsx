@@ -31,7 +31,7 @@ const splitRow = (line: string) =>
     .split("|")
     .map((cell) => cell.trim());
 
-export function parseBlocks(markdown: string): Block[] {
+function parseBlocks(markdown: string): Block[] {
   const lines = markdown.replace(/\r\n?/gu, "\n").split("\n");
   const blocks: Block[] = [];
   let paragraph: string[] = [];
@@ -140,7 +140,10 @@ function renderBlocks(markdown: string): ReactNode[] {
               <thead>
                 <tr>
                   {block.header.map((cell, cellIndex) => (
-                    <th key={cellIndex} className="border border-line bg-canvas-subtle px-3 py-2 text-left font-semibold">
+                    <th
+                      key={cellIndex}
+                      className="border border-line bg-canvas-subtle px-3 py-2 text-left font-semibold"
+                    >
                       {renderInline(cell)}
                     </th>
                   ))}
@@ -168,13 +171,13 @@ function renderBlocks(markdown: string): ReactNode[] {
 
 // Japanese characters (kana, kanji, Japanese punctuation, full-width forms) and furigana markup groups; a run may contain
 // single spaces, which are word boundaries for romaji.
-const JA = String.raw`\{[^{}\n]*\}|[　-ヿ㐀-䶿一-鿿＀-￯々〆ヶ]`;
+const JA = String.raw`\{[^{}\n]*\}|[\u3000-\u30FF\u3400-\u4DBF\u4E00-\u9FFF\uFF00-\uFFEF\u3005\u3006\u30F6]`;
 const inlinePattern = new RegExp(
   String.raw`\[([^\]]+)\]\((https:\/\/[^\s)]+)\)|\*\*([^*]+)\*\*|\*([^*\s][^*]*)\*|((?:${JA})(?: ?(?:${JA}))*)`,
   "gu",
 );
 
-export function renderInline(text: string): ReactNode[] {
+function renderInline(text: string): ReactNode[] {
   const nodes: ReactNode[] = [];
   let last = 0;
   let key = 0;
@@ -201,7 +204,13 @@ export function renderInline(text: string): ReactNode[] {
       nodes.push(<em key={key++}>{renderInline(italic)}</em>);
     } else if (japanese !== undefined) {
       const parsed = parseFurigana(japanese);
-      nodes.push(parsed.errors.length > 0 ? japanese : <JapaneseText key={key++} value={parsed.segments} variant="content" />);
+      nodes.push(
+        parsed.errors.length > 0 ? (
+          japanese
+        ) : (
+          <JapaneseText key={key++} value={parsed.segments} variant="content" />
+        ),
+      );
     } else {
       nodes.push(whole);
     }

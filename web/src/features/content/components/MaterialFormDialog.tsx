@@ -17,7 +17,8 @@ import { fieldsToTextBlock, textBlockToFields, type TextBlockFields } from "@/i1
 import { errorCode } from "@/lib/api/errors";
 import { isoToZoned, zonedToIso } from "@/lib/datetime";
 import { useCreateMaterial, useUpdateMaterial, type MaterialDto, type MaterialKind } from "../api/content";
-import { emptyTextBlock, TextBlockInput } from "./TextBlockInput";
+import { emptyTextBlock } from "./textBlockForm";
+import { TextBlockInput } from "./TextBlockInput";
 import { UploadField } from "./UploadField";
 
 /** Same checks as the server (TextRules): no raw HTML, no inline images, https links only. */
@@ -57,18 +58,30 @@ export function MaterialFormDialog({
   );
 }
 
-function MaterialForm({ chapterId, material, onClose }: { chapterId: string; material?: MaterialDto; onClose: () => void }) {
+function MaterialForm({
+  chapterId,
+  material,
+  onClose,
+}: {
+  chapterId: string;
+  material?: MaterialDto;
+  onClose: () => void;
+}) {
   const t = useT();
   const me = useCurrentUser();
   const create = useCreateMaterial(chapterId);
   const update = useUpdateMaterial(chapterId);
   const [kind, setKind] = useState<MaterialKind>(material?.kind ?? "richtext");
-  const [title, setTitle] = useState<TextBlockFields>(material ? textBlockToFields(material.title) : emptyTextBlock);
+  const [title, setTitle] = useState<TextBlockFields>(
+    material ? textBlockToFields(material.title) : emptyTextBlock,
+  );
   const [bodyId, setBodyId] = useState(material?.body?.id ?? "");
   const [bodyEn, setBodyEn] = useState(material?.body?.en ?? "");
   const [url, setUrl] = useState(material?.url ?? "");
   const [fileId, setFileId] = useState<string | null>(material?.file?.id ?? null);
-  const initialPublish = material?.publishAt ? isoToZoned(material.publishAt, me.timezone) : { date: "", time: "" };
+  const initialPublish = material?.publishAt
+    ? isoToZoned(material.publishAt, me.timezone)
+    : { date: "", time: "" };
   const [publishDate, setPublishDate] = useState(initialPublish.date);
   const [publishTime, setPublishTime] = useState(initialPublish.time);
   const [submitted, setSubmitted] = useState(false);
@@ -77,7 +90,11 @@ function MaterialForm({ chapterId, material, onClose }: { chapterId: string; mat
   const titleMissing = title.id.trim() === "";
   const titleMarkupInvalid = title.ja.trim() !== "" && parseFurigana(title.ja).errors.length > 0;
   const contentInvalid =
-    kind === "richtext" ? bodyId.trim() === "" || markdownProblem(bodyId) || markdownProblem(bodyEn) : kind === "link" ? !url.startsWith("https://") : fileId === null;
+    kind === "richtext"
+      ? bodyId.trim() === "" || markdownProblem(bodyId) || markdownProblem(bodyEn)
+      : kind === "link"
+        ? !url.startsWith("https://")
+        : fileId === null;
   const invalid = titleMissing || titleMarkupInvalid || contentInvalid;
   const publishAt = publishDate && publishTime ? zonedToIso(publishDate, publishTime, me.timezone) : null;
 
@@ -86,7 +103,10 @@ function MaterialForm({ chapterId, material, onClose }: { chapterId: string; mat
     setFormError(null);
     if (invalid) return;
     const titleBlock = fieldsToTextBlock(title);
-    const body = kind === "richtext" ? { format: "md", id: bodyId.trim(), en: bodyEn.trim() === "" ? null : bodyEn.trim() } : null;
+    const body =
+      kind === "richtext"
+        ? { format: "md", id: bodyId.trim(), en: bodyEn.trim() === "" ? null : bodyEn.trim() }
+        : null;
     try {
       if (material) {
         await update.mutateAsync({
@@ -121,7 +141,11 @@ function MaterialForm({ chapterId, material, onClose }: { chapterId: string; mat
   };
 
   return (
-    <DialogContent closeLabel={t(common.close)} aria-describedby={undefined} className="max-h-[90dvh] max-w-2xl overflow-y-auto">
+    <DialogContent
+      closeLabel={t(common.close)}
+      aria-describedby={undefined}
+      className="max-h-[90dvh] max-w-2xl overflow-y-auto"
+    >
       <DialogHeader>
         <DialogTitle>
           <Label value={material ? materials.edit : materials.add} companion="inline" />
@@ -169,7 +193,9 @@ function MaterialForm({ chapterId, material, onClose }: { chapterId: string; mat
                 rows={10}
                 className="font-ja"
                 value={bodyId}
-                aria-invalid={submitted && (bodyId.trim() === "" || markdownProblem(bodyId)) ? true : undefined}
+                aria-invalid={
+                  submitted && (bodyId.trim() === "" || markdownProblem(bodyId)) ? true : undefined
+                }
                 aria-describedby="material-body-hint material-body-error"
                 onChange={(event) => {
                   setBodyId(event.target.value);
@@ -177,12 +203,15 @@ function MaterialForm({ chapterId, material, onClose }: { chapterId: string; mat
               />
               <FieldHint id="material-body-hint">{t(materials.bodyHint)}</FieldHint>
               {submitted && (bodyId.trim() === "" || markdownProblem(bodyId)) && (
-                <FieldError id="material-body-error">{t(bodyId.trim() === "" ? fieldErrors.required : fieldErrors.invalid)}</FieldError>
+                <FieldError id="material-body-error">
+                  {t(bodyId.trim() === "" ? fieldErrors.required : fieldErrors.invalid)}
+                </FieldError>
               )}
             </Field>
             <Field>
               <FieldLabel htmlFor="material-body-en">
-                {t(materials.bodyEnglish)} <span className="font-normal text-ink-muted">({t(common.optional)})</span>
+                {t(materials.bodyEnglish)}{" "}
+                <span className="font-normal text-ink-muted">({t(common.optional)})</span>
               </FieldLabel>
               <Textarea
                 id="material-body-en"
@@ -210,7 +239,9 @@ function MaterialForm({ chapterId, material, onClose }: { chapterId: string; mat
                 setUrl(event.target.value);
               }}
             />
-            {submitted && !url.startsWith("https://") && <FieldError id="material-url-error">{t(fieldErrors.invalid)}</FieldError>}
+            {submitted && !url.startsWith("https://") && (
+              <FieldError id="material-url-error">{t(fieldErrors.invalid)}</FieldError>
+            )}
           </Field>
         )}
 
@@ -242,13 +273,16 @@ function MaterialForm({ chapterId, material, onClose }: { chapterId: string; mat
                 }}
               />
             )}
-            {submitted && fileId === null && <FieldError id="material-file-error">{t(fieldErrors.required)}</FieldError>}
+            {submitted && fileId === null && (
+              <FieldError id="material-file-error">{t(fieldErrors.required)}</FieldError>
+            )}
           </Field>
         )}
 
         <Field>
           <FieldLabel htmlFor="material-publish-date">
-            {t(materials.publishAt)} <span className="font-normal text-ink-muted">({t(common.optional)})</span>
+            {t(materials.publishAt)}{" "}
+            <span className="font-normal text-ink-muted">({t(common.optional)})</span>
           </FieldLabel>
           <div className="flex gap-2">
             <Input

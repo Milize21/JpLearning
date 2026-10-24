@@ -50,7 +50,9 @@ export function UploadField({
     upload.current = startUpload(file, purpose, {
       onProgress: (sent, total) => {
         setState((current) =>
-          current.phase === "paused" ? current : { phase: "uploading", name: file.name, percent: Math.floor((sent / total) * 100) },
+          current.phase === "paused"
+            ? current
+            : { phase: "uploading", name: file.name, percent: Math.floor((sent / total) * 100) },
         );
       },
       onSuccess: (fileId) => {
@@ -60,7 +62,14 @@ export function UploadField({
       onError: (status) => {
         setState({
           phase: "error",
-          code: status === 413 ? "file_too_large" : status === 429 ? "rate_limited" : status === 403 ? "forbidden" : "failed",
+          code:
+            status === 413
+              ? "file_too_large"
+              : status === 429
+                ? "rate_limited"
+                : status === 403
+                  ? "forbidden"
+                  : "failed",
         });
       },
     });

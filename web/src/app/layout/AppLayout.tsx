@@ -210,7 +210,7 @@ export function AppLayout({ me, children }: { me: UserProfile; children?: ReactN
           {children ?? <Outlet />}
         </main>
       </div>
-      {isStudent && <BottomNav items={items} />}
+      {isStudent && <BottomNav items={items.filter((item) => item.sidebarOnly !== true)} />}
       {!isStudent && (
         <Dialog open={drawerOpen} onOpenChange={setDrawerOpen}>
           <DialogContent closeLabel={t(common.close)} aria-describedby={undefined}>

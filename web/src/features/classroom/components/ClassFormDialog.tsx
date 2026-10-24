@@ -20,7 +20,13 @@ import { errorCode } from "@/lib/api/errors";
 import { useCreateClass, type ClassStatus } from "../api/classroom";
 
 /** Create a class; the creator becomes its primary teacher (BR-AKSES-03). */
-export function ClassFormDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
+export function ClassFormDialog({
+  open,
+  onOpenChange,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
   const t = useT();
   const { uiLocale } = usePrefs();
   const me = useCurrentUser();
@@ -89,7 +95,9 @@ export function ClassFormDialog({ open, onOpenChange }: { open: boolean; onOpenC
               }}
             />
             <FieldHint id="class-name-hint">{t(classes.nameHint)}</FieldHint>
-            {submitted && nameInvalid && <FieldError id="class-name-error">{t(fieldErrors.required)}</FieldError>}
+            {submitted && nameInvalid && (
+              <FieldError id="class-name-error">{t(fieldErrors.required)}</FieldError>
+            )}
           </Field>
           <Field>
             <FieldLabel htmlFor="class-level">{t(classes.level)}</FieldLabel>

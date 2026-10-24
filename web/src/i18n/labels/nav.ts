@@ -10,6 +10,13 @@ export const nav = {
   myClasses: tb("Kelas saya", "My classes", "クラス"), // ja-review
   materials: tb("Materi", "Materials", "{教材|きょうざい}"), // ja-review
   schedule: tb("Jadwal", "Schedule", "{予定|よてい}"), // ja-review
+  practice: tb("Latihan", "Practice", "{練習|れんしゅう}"), // ja-review
+  weaknesses: tb("Kelemahan", "Weak spots", "{苦手|にがて}"), // ja-review
+  questionBank: tb("Bank soal", "Question bank", "{問題集|もんだいしゅう}"), // ja-review
+  questionSources: tb("Sumber soal", "Question sources", "{出典|しゅってん}"), // ja-review
+  quizzes: tb("Kuis & ujian", "Quizzes & exams", "{小|しょう}テスト"), // ja-review
+  assignments: tb("Tugas", "Assignments", "{課題|かだい}"), // ja-review
+  grades: tb("Nilai", "Grades", "{成績|せいせき}"), // ja-review
   login: tb("Masuk", "Log in", "ログイン"), // ja-review
   logout: tb("Keluar", "Log out", "ログアウト"), // ja-review
   mainNavigation: tb("Navigasi utama", "Main navigation", "メイン メニュー"), // ja-review

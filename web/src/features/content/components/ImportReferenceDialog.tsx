@@ -13,10 +13,15 @@ import { errorLabel } from "@/i18n/labels/errors";
 import { usePrefs, useT } from "@/i18n/prefs";
 import { textIn } from "@/i18n/textblock";
 import { errorCode } from "@/lib/api/errors";
-import { useImportReference, type ImportReferenceResponse, type LevelDto, type ReferenceType } from "../api/content";
+import {
+  useImportReference,
+  type ImportReferenceResponse,
+  type LevelDto,
+  type ReferenceType,
+} from "../api/content";
 
 /** Columns of each import format (ReferenceImport.ColumnsOf on the server); the first ones are required. */
-export const referenceColumns: Record<ReferenceType, string> = {
+const referenceColumns: Record<ReferenceType, string> = {
   kana: "char, script, romaji, row_key, variant, sort_order, chapter",
   kanji: "character, meanings_id, onyomi, kunyomi, meanings_en, stroke_count, kanjivg_code, chapter",
   vocab: "word, reading, meanings_id, meanings_en, pos, tags, jmdict_seq, chapter",
@@ -86,7 +91,11 @@ export function ImportReferenceDialog({
 
   return (
     <Dialog open={open} onOpenChange={close}>
-      <DialogContent closeLabel={t(common.close)} aria-describedby={undefined} className="max-h-[90dvh] max-w-2xl overflow-y-auto">
+      <DialogContent
+        closeLabel={t(common.close)}
+        aria-describedby={undefined}
+        className="max-h-[90dvh] max-w-2xl overflow-y-auto"
+      >
         <DialogHeader>
           <DialogTitle>
             <Label value={reference.importTitle} vars={{ type: typeLabel }} companion="inline" />
@@ -166,7 +175,11 @@ export function ImportReferenceDialog({
             <Alert tone="success" icon={CircleCheck}>
               {importedNow
                 ? t(reference.imported, { n: result.created })
-                : t(reference.summary, { n: result.totalRows, create: result.toCreate, skip: result.skipped })}
+                : t(reference.summary, {
+                    n: result.totalRows,
+                    create: result.toCreate,
+                    skip: result.skipped,
+                  })}
             </Alert>
           )}
 
@@ -190,8 +203,9 @@ export function ImportReferenceDialog({
                       <TD className="font-mono">{cell.column || t(reference.wholeFile)}</TD>
                       <TD>
                         {t(
-                          referenceImportErrors[cell.code as keyof typeof referenceImportErrors] ??
-                            referenceImportErrors.invalid_format,
+                          cell.code in referenceImportErrors
+                            ? referenceImportErrors[cell.code as keyof typeof referenceImportErrors]
+                            : referenceImportErrors.invalid_format,
                         )}
                       </TD>
                     </TR>
@@ -217,7 +231,12 @@ export function ImportReferenceDialog({
                 {t(reference.createN, { n: result.toCreate })}
               </Button>
             ) : (
-              <Button variant="primary" disabled={!ready} loading={importReference.isPending} onClick={() => void run(true)}>
+              <Button
+                variant="primary"
+                disabled={!ready}
+                loading={importReference.isPending}
+                onClick={() => void run(true)}
+              >
                 {t(reference.check)}
               </Button>
             ))}

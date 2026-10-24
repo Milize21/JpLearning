@@ -12,7 +12,14 @@ import { errorLabel } from "@/i18n/labels/errors";
 import { usePrefs, useT } from "@/i18n/prefs";
 import { textIn } from "@/i18n/textblock";
 import { errorCode } from "@/lib/api/errors";
-import { useBook, useDeleteStructure, useLevels, type BookSummaryDto, type LevelDto, type StructureKind } from "../api/content";
+import {
+  useBook,
+  useDeleteStructure,
+  useLevels,
+  type BookSummaryDto,
+  type LevelDto,
+  type StructureKind,
+} from "../api/content";
 import { StructureDialog, type StructureTarget } from "../components/StructureDialogs";
 
 interface DeleteTarget {
@@ -48,7 +55,9 @@ export function AdminContentPage() {
       />
 
       {levels.isPending && <Skeleton className="h-40" />}
-      {levels.data?.length === 0 && <EmptyState icon={Layers} title={<Label value={structure.emptyLevels} />} />}
+      {levels.data?.length === 0 && (
+        <EmptyState icon={Layers} title={<Label value={structure.emptyLevels} />} />
+      )}
       {levels.data?.map((level) => (
         <LevelCard key={level.id} level={level} onDialog={setDialog} onDelete={setDeleting} />
       ))}
@@ -185,10 +194,16 @@ function BookRow({
             setOpen(!open);
           }}
         >
-          {open ? <ChevronDown className="size-4" aria-hidden="true" /> : <ChevronRight className="size-4" aria-hidden="true" />}
+          {open ? (
+            <ChevronDown className="size-4" aria-hidden="true" />
+          ) : (
+            <ChevronRight className="size-4" aria-hidden="true" />
+          )}
           <span className="flex flex-col">
             <ContentText value={book.title} className="font-semibold text-ink" />
-            <span className="text-caption text-ink-muted">{t(structure.chapterCount, { n: book.chapterCount })}</span>
+            <span className="text-caption text-ink-muted">
+              {t(structure.chapterCount, { n: book.chapterCount })}
+            </span>
           </span>
         </button>
         <Button
@@ -215,7 +230,9 @@ function BookRow({
       {open && (
         <div className="flex flex-col gap-2 border-t border-line bg-canvas-subtle px-4 py-3">
           {detail.isPending && <Skeleton className="h-16" />}
-          {detail.data && chapters.length === 0 && <p className="text-body-sm text-ink-muted">{t(structure.emptyChapters)}</p>}
+          {detail.data && chapters.length === 0 && (
+            <p className="text-body-sm text-ink-muted">{t(structure.emptyChapters)}</p>
+          )}
           <ol className="flex flex-col gap-1">
             {chapters.map((chapter) => {
               const chapterName = textIn(chapter.title, uiLocale);

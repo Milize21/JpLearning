@@ -47,7 +47,12 @@ export function ClassListPage() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
-        title={<Label value={isStaff ? classes.title : classes.myClasses} companionClassName="text-body font-medium" />}
+        title={
+          <Label
+            value={isStaff ? classes.title : classes.myClasses}
+            companionClassName="text-body font-medium"
+          />
+        }
         description={t(classes.description)}
         actions={
           isStaff && (
@@ -85,7 +90,9 @@ export function ClassListPage() {
                   <ClassBookLine item={item} />
                   <p className="text-body-sm text-ink-muted">
                     {t(classes.students, { n: item.studentCount })} ·{" "}
-                    {t(classes.teachersOf, { names: item.teachers.map((teacher) => teacher.displayName).join(", ") })}
+                    {t(classes.teachersOf, {
+                      names: item.teachers.map((teacher) => teacher.displayName).join(", "),
+                    })}
                   </p>
                 </div>
                 <ChevronRight className="mt-1 size-5 shrink-0 text-ink-subtle" aria-hidden="true" />

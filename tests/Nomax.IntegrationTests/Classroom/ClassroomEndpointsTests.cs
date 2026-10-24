@@ -76,6 +76,55 @@ public sealed class ClassroomEndpointsTests(NomaxApiFixture api)
     }
 
     [Fact]
+    public async Task BR_AKSES_02_closing_a_chapter_hides_its_materials_and_publishes_ChapterLocked()
+    {
+        using var client = api.CreateClient();
+        var world = await NewWorldAsync(client);
+        var chapter = world.Chapters[0];
+        var classId = await NewClassAsync(client, world, "Tutup");
+        var (studentId, student) = await NewStudentAsync(client, "tutup");
+        await client.JsonAsync("POST", $"/api/classroom/classes/{classId}/students", Admin, new { studentIds = new[] { studentId } });
+        await client.JsonAsync("PUT", $"/api/classroom/classes/{classId}/unlocks/{chapter}", Admin);
+        await client.JsonAsync("POST", $"/api/content/chapters/{chapter}/materials", Admin, new { kind = "link", title = new { id = "Tautan" }, url = "https://example.com/bab1" });
+        (await client.JsonAsync("GET", $"/api/content/chapters/{chapter}/materials", student)).GetArrayLength().ShouldBe(1);
+
+        (await client.StatusAsync("DELETE", $"/api/classroom/classes/{classId}/unlocks/{chapter}", Admin)).ShouldBe(204);
+
+        (await client.StatusAsync("GET", $"/api/content/chapters/{chapter}", student)).ShouldBe(403);
+        (await client.StatusAsync("GET", $"/api/content/chapters/{chapter}/materials", student)).ShouldBe(403);
+        (await client.JsonAsync("GET", $"/api/content/chapters/{chapter}/materials", Admin)).GetArrayLength().ShouldBe(1);
+        (await CountAsync($"select count(*) from classroom.outbox_messages where type = 'ChapterLocked.v1' and payload->>'classId' = '{classId}'")).ShouldBe(1);
+        (await client.JsonAsync("GET", $"/api/classroom/classes/{classId}/unlocks", Admin)).GetArrayLength().ShouldBe(0);
+    }
+
+    [Fact]
+    public async Task BR_JADWAL_02_meeting_links_reach_only_active_members_and_teachers()
+    {
+        using var client = api.CreateClient();
+        var world = await NewWorldAsync(client);
+        var classId = await NewClassAsync(client, world, "Link");
+        var (memberId, member) = await NewStudentAsync(client, "link");
+        var (_, outsider) = await NewStudentAsync(client, "luar");
+        await client.JsonAsync("POST", $"/api/classroom/classes/{classId}/students", Admin, new { studentIds = new[] { memberId } });
+        var start = DateTimeOffset.UtcNow.AddDays(2);
+        var session = await client.JsonAsync("POST", $"/api/classroom/classes/{classId}/sessions", Admin, new { topic = "Link", startsAt = start, endsAt = start.AddHours(1), platform = "zoom", meetingUrl = "https://zoom.us/j/42" });
+        var sessionId = session.GetProperty("id").GetGuid();
+        var window = $"from={Uri.EscapeDataString(DateTimeOffset.UtcNow.ToString("O"))}&to={Uri.EscapeDataString(start.AddDays(1).ToString("O"))}";
+
+        var forMember = await client.JsonAsync("GET", $"/api/classroom/classes/{classId}/sessions?{window}", member);
+        forMember.ShouldHaveSingleItemWhere(item => item.GetProperty("meetingUrl").GetString() == "https://zoom.us/j/42");
+        (await client.StatusAsync("GET", $"/api/classroom/classes/{classId}/sessions?{window}", outsider)).ShouldBe(404);
+        var outsiderSchedule = await client.JsonAsync("GET", $"/api/classroom/me/schedule?{window}", outsider);
+        outsiderSchedule.EnumerateArray().Any(item => item.GetProperty("id").GetGuid() == sessionId).ShouldBeFalse();
+
+        // Leaving the class ends access to the link as well.
+        await client.JsonAsync("DELETE", $"/api/classroom/classes/{classId}/students/{memberId}", Admin);
+        (await client.StatusAsync("GET", $"/api/classroom/classes/{classId}/sessions?{window}", member)).ShouldBe(404);
+        var memberSchedule = await client.JsonAsync("GET", $"/api/classroom/me/schedule?{window}", member);
+        memberSchedule.EnumerateArray().Any(item => item.GetProperty("id").GetGuid() == sessionId).ShouldBeFalse();
+    }
+
+    [Fact]
     public async Task Students_are_added_by_username_and_unknown_names_are_reported()
     {
         using var client = api.CreateClient();
