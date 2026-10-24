@@ -49,6 +49,8 @@ node scripts/dev-live.mjs stop            # hentikan aplikasi (Docker tetap jala
 node scripts/dev-live.mjs run             # di terminal ini (Ctrl+C berhenti)
 ```
 
+Di Windows cukup klik dua kali **`jalankan-lokal.bat`** di root repo. Skrip itu memeriksa prasyarat (Node, .NET, Docker, `infra/.env`, user-secrets), memasang paket web bila belum ada, menjalankan `dev-live start`, menunggu API/Gateway/web siap, lalu membuka `http://localhost:5173`. Argumen lain diteruskan ke supervisor: `jalankan-lokal.bat status` · `stop` · `restart api`.
+
 Log: `.live/logs/` (`supervisor.log`, `api.log`, `gateway.log`, `web.log`, `build.log`). Folder `.live/` tidak di-commit.
 
 ## Port

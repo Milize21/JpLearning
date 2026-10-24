@@ -23,7 +23,7 @@ Diuji di akhir Fase 0.1 (Windows 11, .NET SDK 10.0.402, Docker Desktop 29.7). De
 - Build: `dotnet build Nomax.slnx` (warning = error)
 - Format: `dotnet format Nomax.slnx --verify-no-changes`
 - Tes: `dotnet test Nomax.slnx` (runner Microsoft.Testing.Platform lewat `global.json`; satu proyek: `dotnet test --project tests/<Proyek>`). Tes integrasi butuh Docker berjalan (Testcontainers PostgreSQL + Valkey).
-- Sistem live (wajib menyala selama bekerja, permintaan pemilik proyek): `node scripts/dev-live.mjs start` · `status` · `restart <api|gateway|web>` · `stop`. Menjalankan API, Gateway, Vite dari `.live/`, restart otomatis bila mati, build ulang saat `src/` berubah. Detail: `infra/README.md`.
+- Sistem live (wajib menyala selama bekerja, permintaan pemilik proyek): `node scripts/dev-live.mjs start` · `status` · `restart <api|gateway|web>` · `stop`. Menjalankan API, Gateway, Vite dari `.live/`, restart otomatis bila mati, build ulang saat `src/` berubah. Detail: `infra/README.md`. Di Windows, `jalankan-lokal.bat` (root repo) membungkus `start` dengan cek prasyarat, menunggu sampai siap, lalu membuka browser.
 - Jalankan manual: `dotnet run --project src/Nomax.Api` (5080) · `dotnet run --project src/Nomax.Gateway` (8080)
 - Audit paket: `dotnet list Nomax.slnx package --vulnerable --include-transitive`
 - Frontend (`web/`, Node 22+): `npm --prefix web run dev` (5173) · `test` (Vitest) · `lint` · `lint:tokens` · `typecheck` · `build` · `format:check` · `gen:api` (butuh API hidup) · `e2e` (Playwright + Chrome lokal; butuh infra, memakai server yang sudah hidup)
